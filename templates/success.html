@@ -1,0 +1,33 @@
+<!-- templates/success.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success Page</title>
+</head>
+<body>
+    <h1>Records</h1>
+    <table border="1">
+        {% for first_key in records.keys() %}
+            <tr>
+                <td colspan="{{ records[first_key][0]|length }}">
+                    <h2>{{ first_key }}</h2>
+                </td>
+            </tr>
+            <tr>
+                {% for second_keys in records[first_key][0] %}
+                    <td>{{ second_keys }}</td>
+                {% endfor %}
+            </tr>
+            {% for list_value in records[first_key] %}
+                <tr>
+                    {% for key, value in list_value.items() %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
+</body>
+</html>
