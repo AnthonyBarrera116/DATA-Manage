@@ -1,0 +1,77 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoo Management System</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+
+<body>
+    <div id="header">
+        <h1>Zoo Management System</h1>
+        <div class="stripe"></div>
+    </div>
+
+    <div id="main-menu">
+        <div class="category-container">
+            
+            <div class="category-box asset-management">
+                <h2>Asset Management</h2>
+                <form action="/AnimalManagement" method="post">
+                    <button type="submit">Update/Insert Animal</button>
+                </form>
+                <form action="/BuildingManagement" method="post" >
+                    <button type="submit">Update/Insert Building</button>
+                </form>
+                <form action="/EmployeeManagement" method="post" >
+                    <button type="submit">Update/Insert Building</button>
+                </form>
+            </div>
+
+            <div class="category-box" onclick="showDailyZooActivityMenu()">
+                <h2>Daily Zoo Activity</h2>
+                <!-- Add buttons or forms related to Daily Zoo Activity here -->
+            </div>
+            <div class="category-box" onclick="showManagementReportingMenu()">
+                <h2>Management and Reporting</h2>
+                <!-- Add buttons or forms related to Management and Reporting here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="asset-management-menu" style="display: none;">
+        <!-- Content for Asset Management Menu -->
+    </div>
+
+    <!-- Similar modifications for other menus -->
+
+    <script>
+        function updateInsertAnimal() {
+            alert("Update/Insert Animal Clicked");
+            // Add logic for updating/inserting animal
+        }
+
+        function updateInsertBuilding() {
+            alert("Update/Insert Building Clicked");
+            // Add logic for updating/inserting building
+        }
+
+        function updateInsertEmployee() {
+            alert("Update/Insert Employee Clicked");
+            // Add logic for updating/inserting employee
+        }
+
+        function showDailyZooActivityMenu() {
+            // Additional logic if needed
+            document.getElementById('daily-zoo-activity-menu').style.display = 'block';
+        }
+
+        function showManagementReportingMenu() {
+            // Additional logic if needed
+            document.getElementById('management-reporting-menu').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
