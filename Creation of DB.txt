@@ -1,0 +1,173 @@
+
+-- Drop the database if it exists
+DROP DATABASE IF EXISTS ZOO;
+
+-- Create the database
+CREATE DATABASE ZOO;
+
+-- Use the ZOO database
+USE ZOO;
+-- Define the Employee table
+CREATE TABLE Employee (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(255),
+    LastName VARCHAR(255),
+    Minit CHAR(1),  -- Assuming Minit is a single character
+    JobType VARCHAR(255),
+    StartDate DATE,
+    Street VARCHAR(255),
+    City VARCHAR(255),
+    State VARCHAR(255),
+    ZIP VARCHAR(10)
+);
+
+-- Define the Supervises relationship
+CREATE TABLE Supervises (
+    SupervisorID INT,
+    FOREIGN KEY (SupervisorID) REFERENCES Employee(ID),
+    PRIMARY KEY (SupervisorID)
+);
+
+-- Define the HourlyRate table
+CREATE TABLE HourlyRate (
+    ID INT PRIMARY KEY,
+    RateEarned DECIMAL(10, 2),  -- Assuming RateEarned is a decimal value
+    FOREIGN KEY (ID) REFERENCES Employee(ID)
+);
+
+-- Define the Veterinarian table (Subclass)
+CREATE TABLE Veterinarian (
+    EmployeeID INT PRIMARY KEY,
+    FOREIGN KEY (EmployeeID) REFERENCES Employee(ID)
+);
+
+-- Define the AnimalCare table (Subclass)
+CREATE TABLE AnimalCare (
+    EmployeeID INT PRIMARY KEY,
+    FOREIGN KEY (EmployeeID) REFERENCES Employee(ID)
+);
+
+-- Define the Species table
+CREATE TABLE Species (
+    ID INT PRIMARY KEY,
+    Name VARCHAR(255),
+    FoodCost DECIMAL(10, 2)
+);
+
+-- Define the CaresForSpecies table
+CREATE TABLE CaresForSpecies (
+    EmployeeID INT,
+    SpeciesID INT,
+    PRIMARY KEY (EmployeeID, SpeciesID),
+    FOREIGN KEY (EmployeeID) REFERENCES Employee(ID),
+    FOREIGN KEY (SpeciesID) REFERENCES Species(ID)
+);
+
+-- Define the Building table
+CREATE TABLE Building (
+    ID INT PRIMARY KEY,
+    Name VARCHAR(255),
+    Type VARCHAR(255)
+);
+
+-- Define the RevenueType table
+
+CREATE TABLE RevenueType (
+    ID INT PRIMARY KEY,
+    Name VARCHAR(255),
+    Type VARCHAR(255)
+);
+
+-- Define the RevenueEvents table
+CREATE TABLE RevenueEvents (
+    RevenueTypeID INT,
+    -- Attributes of weak entity RevenueEvents
+    Revenue DECIMAL(10, 2),
+    TicketsSold INT,
+    DateTime DATETIME,
+    PRIMARY KEY (RevenueTypeID),  -- Primary key including the foreign key
+    FOREIGN KEY (RevenueTypeID) REFERENCES RevenueType(ID)
+);
+
+-- Define the Enclosure table
+
+CREATE TABLE Enclosure (
+    ID INT PRIMARY KEY,
+    SquareFoot INT,
+    BuildingID INT,
+    FOREIGN KEY (BuildingID) REFERENCES Building(ID)
+);
+
+-- Define the Animal table
+
+CREATE TABLE Animal (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Status VARCHAR(255),
+    BirthYear INT,
+    SpeciesID INT,
+    EnclosureID INT,
+    FOREIGN KEY (SpeciesID) REFERENCES Species(ID),
+    FOREIGN KEY (EnclosureID) REFERENCES Enclosure(ID)
+);
+
+-- Define the Host table
+CREATE TABLE Host (
+    BuildingID INT,
+    RevenueTypeID INT UNIQUE,  -- Unique constraint for 1-to-1 relationship
+    FOREIGN KEY (BuildingID) REFERENCES Building(ID),
+    FOREIGN KEY (RevenueTypeID) REFERENCES RevenueType(ID),
+    PRIMARY KEY (BuildingID)
+);
+
+-- Define the Maintenance table (Subclass)
+CREATE TABLE Maintenance (
+    EmployeeID INT PRIMARY KEY,
+    FOREIGN KEY (EmployeeID) REFERENCES Employee(ID)
+);
+
+-- Define the CustomerService table (Subclass)
+CREATE TABLE CustomerService (
+    EmployeeID INT PRIMARY KEY,
+    FOREIGN KEY (EmployeeID) REFERENCES Employee(ID)
+);
+
+-- Define the Concession table (Subclass)
+CREATE TABLE Concession (
+    Product VARCHAR(255),
+    CustomerServiceEmployeeID INT,
+    RevenueTypeID INT,
+    FOREIGN KEY (CustomerServiceEmployeeID) REFERENCES CustomerService(EmployeeID),
+    FOREIGN KEY (RevenueTypeID) REFERENCES RevenueType(ID),
+    PRIMARY KEY (CustomerServiceEmployeeID) 
+);
+
+-- Define the TicketSeller table (Subclass)
+CREATE TABLE TicketSeller (
+    EmployeeID INT PRIMARY KEY,
+    FOREIGN KEY (EmployeeID) REFERENCES Employee(ID)
+);
+
+-- Define the ZooAdmission Table
+CREATE TABLE ZooAdmission (
+    SeniorPrice DECIMAL(10, 2),
+    AdultPrice DECIMAL(10, 2),
+    ChildPrice DECIMAL(10, 2),
+    RevenueTypeID INT,
+    TicketSellerEmployeeID INT PRIMARY KEY,
+    FOREIGN KEY (TicketSellerEmployeeID) REFERENCES TicketSeller(EmployeeID),
+    FOREIGN KEY (RevenueTypeID) REFERENCES RevenueType(ID)
+);
+
+-- Define the AnimalShow table (Including Relationship with Species and Subclass to RevenueType)
+CREATE TABLE AnimalShow (
+    SeniorPrice DECIMAL(10, 2),
+    AdultPrice DECIMAL(10, 2),
+    ChildPrice DECIMAL(10, 2),
+    NumberPerDay INT,
+    NumberRequested INT,  
+    RevenueTypeID INT,
+    SpeciesID INT,
+    FOREIGN KEY (RevenueTypeID) REFERENCES RevenueType(ID),
+    FOREIGN KEY (SpeciesID) REFERENCES Species(ID)
+);
+
