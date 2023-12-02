@@ -1,18 +1,18 @@
 -- Populate Employee table
 INSERT INTO Employee (ID, FirstName, LastName, Minit, JobType, StartDate, Street, City, State, ZIP)
 VALUES
-(1, 'John', 'Doe', 'A', 'Manager', '2022-01-01', '123 Main St', 'Cityville', 'CA', '12345'),
+(1, 'John', 'Doe', 'A', 'Zookeeper', '2022-01-01', '123 Main St', 'Cityville', 'CA', '12345'),
 (2, 'Jane', 'Smith', 'B', 'Zookeeper', '2022-02-15', '456 Oak St', 'Towndale', 'NY', '67890'),
 (3, 'Bob', 'Johnson', 'C', 'Maintenance', '2022-03-10', '789 Pine St', 'Villagetown', 'TX', '45678'),
-(4, 'Alice', 'Williams', 'D', 'CustomerService', '2022-04-05', '101 Cedar St', 'Hamletsville', 'FL', '78901'),
-(5, 'Charlie', 'Brown', 'E', 'TicketSeller', '2022-05-20', '202 Elm St', 'Ruraltown', 'AZ', '23456'),
-(6, 'Eva', 'Miller', 'F', 'Veterinarian', '2022-06-15', '303 Birch St', 'Suburbia', 'WA', '56789'),
+(4, 'Charlie', 'Brown', 'E', 'Maintenance', '2022-05-20', '202 Elm St', 'Ruraltown', 'AZ', '23456'),
+(5, 'Eva', 'Miller', 'F', 'Veterinarian', '2022-06-15', '303 Birch St', 'Suburbia', 'WA', '56789'),
+(6, 'Tony', 'Cannoli', 'B', 'Veterinarian', '2022-08-12', '505 Meatball St', 'Broklyn', 'NY', '48546'),
 (7, 'Grace', 'Davis', 'G', 'AnimalCareSpecialist', '2022-07-01', '404 Maple St', 'Smallville', 'OR', '67890'),
-(8, 'Henry', 'Wilson', 'H', 'ConcessionWorker', '2022-08-12', '505 Redwood St', 'Metrocity', 'CA', '78901'),
-(9, 'Tony', 'Cannoli', 'B', 'supervisor', '2022-08-12', '505 Meatball St', 'Broklyn', 'NY', '48546'),
-(10, 'Sophia', 'Lee', 'C', 'Zookeeper', '2022-09-01', '606 Cedar St', 'Villageland', 'TX', '34567'),
-(11, 'Oliver', 'Martin', 'D', 'ConcessionWorker', '2022-10-15', '707 Oak St', 'Uptown', 'CA', '56789'),
-(12, 'Emma', 'White', 'E', 'AnimalCareSpecialist', '2022-11-01', '808 Maple St', 'Downtown', 'NY', '67890');
+(8, 'Henry', 'Wilson', 'H', 'AnimalCareSpecialist', '2022-08-12', '505 Redwood St', 'Metrocity', 'CA', '78901'),
+(9, 'Oliver', 'Martin', 'D', 'ConcessionWorker', '2022-10-15', '707 Oak St', 'Uptown', 'CA', '56789'),
+(10, 'Luis', 'Henry', 'D', 'ConcessionWorker', '2022-10-15', '708 Oak St', 'Uptown', 'CA', '56789'),
+(11, 'Jake', 'Bake', 'D', 'TicketSeller', '2022-10-15', '709 Oak St', 'Uptown', 'CA', '56789'),
+(12, 'Emma', 'White', 'E', 'TicketSeller', '2022-11-01', '808 Maple St', 'Downtown', 'NY', '67890');
 
 
 -- Populate HourlyRate table
@@ -34,34 +34,36 @@ VALUES
 -- Populate Veterinarian table
 INSERT INTO Veterinarian (EmployeeID)
 VALUES
-(6),
-(12);
+(5),
+(6);
 
 -- Populate AnimalCare table
 INSERT INTO AnimalCare (EmployeeID)
 VALUES
 (7),
-(11);
+(8);
 
 -- Populate Maintenance table
 INSERT INTO Maintenance (EmployeeID)
 VALUES
 (3),
-(9);
+(4);
 
 -- Populate Supervise table for the supervisor
 INSERT INTO supervises 
 VALUES
-(9),
+(2),
+(4),
+(6),
+(8),
 (10),
-(11),
 (12);
 
 -- Populate TicketSeller table
 INSERT INTO TicketSeller (EmployeeID)
 VALUES
-(5)
-,(11);
+(11),
+(12);
 
 -- Populate Species table
 INSERT INTO Species (ID, Name, FoodCost)
@@ -77,58 +79,47 @@ VALUES
 -- Populate CaresForSpecies table
 INSERT INTO CaresForSpecies (EmployeeID, SpeciesID)
 VALUES
-(4, 1),
-(3, 2),
-(4, 3),
-(3, 4),
-(10, 5),
-(11, 6),
-(12, 7);;
+(7, 1),
+(8, 2),
+(7, 3),
+(8, 4),
+(7, 5),
+(8, 6),
+(7, 7);
 
 -- Populate Building table
 INSERT INTO Building (ID, Name, Type)
 VALUES
-(1, 'Main Zoo Building', 'Exhibit'),
+(1, 'Main Zoo Building', 'Admisson'),
 (2, 'Aquarium', 'Exhibit'),
 (3, 'Jungle House', 'Exhibit'),
-(4, 'Elephant House', 'Exhibit'),
-(5, 'Bird Aviary', 'Exhibit'),
-(6, 'Reptile House', 'Exhibit'),
-(7, 'Safari Zone', 'Exhibit');
+(4, 'Austrilia House', 'Exhibit');
+
 
 -- Populate RevenueType table
 INSERT INTO RevenueType (ID, Name, Type)
 VALUES
-(1, 'Admission', 'General'),
-(2, 'Concession', 'Food'),
-(3, 'Gift Shop', 'Merchandise'),
-(4, 'Animal Shows', 'Entertainment'),
-(5, 'Membership', 'General'),
-(6, 'Event Rental', 'Event'),
-(7, 'Educational Program', 'Education');
-
+(1, 'Admission', 'Admission'),
+(2, 'Concession 1', 'Concession'),
+(3, 'Kangaroo show', 'Entertainment'),
+(4, 'Concession 2', 'Concession');
 
 -- Existing code for populating CustomerService table
 INSERT INTO CustomerService (EmployeeID)
 VALUES
-(5),
-(10),
-(11),
-(12);
+(9),
+(10);
 
 -- Fix the Concession table insertion
 INSERT INTO Concession (RevenueTypeID, Product, CustomerServiceEmployeeID)
 VALUES
-(2, 'Hot Dog', 5),  
-(5, 'Membership Renewal', 10),  
-(5, 'Event Space Rental', 11),  
-(5, 'School Program', 12);  
+(2, 'Hot Dog', 9),
+(4, 'Cotton Candy', 10);
 
 
 -- Existing code for populating Enclosure table
 INSERT INTO Enclosure (ID, SquareFoot, BuildingID)
 VALUES
-(1, 1000, 1),
 (2, 500, 2),
 (3, 800, 3),
 (4, 1200, 4);
@@ -136,12 +127,12 @@ VALUES
 -- Fix the Animal table insertion
 INSERT INTO Animal (Status, BirthYear, SpeciesID, EnclosureID)
 VALUES
-('Healthy', 2010, 1, 1),
+('Healthy', 2010, 1, 4),
 ('Active', 2015, 2, 2),
 ('Inactive', 2018, 3, 3),
 ('Healthy', 2012, 4, 4),
-('Active', 2014, 5, 1), 
-('Inactive', 2016, 6, 2), 
+('Active', 2014, 5, 2), 
+('Inactive', 2016, 6, 3), 
 ('Healthy', 2019, 7, 3); 
 
 
@@ -151,32 +142,23 @@ VALUES
 (1, 1),
 (2, 2),
 (3, 3),
-(4, 4),
-(5, 5),
-(6, 6),
-(7, 7);
+(4, 4);
 
--- Populate RevenueEvents table (Superclass)
+-- Populate RevenueEvents table with the same RevenueTypeID but different details
 INSERT INTO RevenueEvents (RevenueTypeID, Revenue, TicketsSold, DateTime)
 VALUES
-(2, 150.00, 30, '2022-10-15 14:30:00'),
-(4, 500.00, 100, '2022-10-20 10:00:00'),
-(1, 200.00, 50, '2022-10-25 18:00:00'),
-(5, 200.00, 20, '2022-11-10 15:30:00'),
-(6, 300.00, 40, '2022-11-15 11:00:00'),
-(7, 100.00, 10, '2022-11-20 19:00:00');
+(1, 150.00, 30, '2022-10-15 14:30:00'),
+(2, 200.00, 40, '2022-10-15 14:45:00'),
+(3, 120.00, 22, '2022-10-15 15:15:00'),
+(4, 180.00, 35, '2022-10-15 15:30:00');
 
 -- Populate AnimalShow table (Subclass)
 INSERT INTO AnimalShow (RevenueTypeID, SeniorPrice, AdultPrice, ChildPrice, NumberPerDay, NumberRequested, SpeciesID)
 VALUES
-(4, 25.00, 35.00, 20.00, 2, 100, 1),
-(4, 30.00, 40.00, 25.00, 3, 150, 5), 
-(4, 35.00, 45.00, 30.00, 2, 100, 6), 
-(4, 25.00, 35.00, 20.00, 1, 50, 7);  
+(3, 25.00, 35.00, 20.00, 2, 1, 1);
 
 
 -- Populate ZooAdmission table (Subclass)
 INSERT INTO ZooAdmission (RevenueTypeID, SeniorPrice, AdultPrice, ChildPrice, TicketSellerEmployeeID)
 VALUES
-(1, 20.00, 30.00, 15.00, 5),
-(5, 15.00, 25.00, 10.00, 11);
+(1, 20.00, 30.00, 15.00, 11);

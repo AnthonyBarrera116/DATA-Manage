@@ -24,7 +24,8 @@ def _db_connection(username, password):
     # error connecting
     except Error as e:
         print("Error while connecting to MySQL", e)
-        return None
+    
+    return 1
 
 # Close the database connection
 def close_connection(connection):
@@ -44,13 +45,12 @@ def checking_user(username,password):
             
         db_connection.close()
 
-
         return 0
         
     except:
+
         return 1
-    
-# adding users uses a specific where you can just push a sql and data to add rather than indivdual 
+
 def add(username, password, sql, data):
 
     try:
@@ -67,34 +67,45 @@ def add(username, password, sql, data):
 
         affected_rows = cursor.rowcount
 
-        cursor.close()
-        db_connection.close()
-
         if affected_rows > 0:
+
+
+            db_connection.close()
+            cursor.close()
             return 0  # Success
         else:
-            return 2  # No rows affected (possible duplicate)
+
+            db_connection.close()
+            cursor.close()
+            return 4  # No rows affected (possible duplicate)
 
     except Exception as e:
+        # Log the error instead of printing
         print(f"Error: {e}")
+        # Return a specific error code or raise an exception based on your needs
+        db_connection.close()
+        cursor.close()
         return 1  # Other errors
 
     
 # Retrives data from certain tables passed through
-def get_db_info(username, password, tables):
+from mysql.connector import Error
 
+def get_db_info(username, password, tables):
     try:
         # Assuming _db_connection is a function that returns a valid database connection
         db_connection = _db_connection(username, password)
+
+        if not db_connection:
+            print("Error: Database connection is not established.")
+            return 1
 
         cursor = db_connection.cursor(dictionary=True)
 
         list_of_all = {}
 
         for table in tables:
-
-            query = "SELECT * FROM " + table
-
+            query = f"SELECT * FROM {table}"
             cursor.execute(query)
             records = cursor.fetchall()
             list_of_all[table] = records
@@ -104,33 +115,85 @@ def get_db_info(username, password, tables):
             return list_of_all
 
     except Error as e:
+        print("Error while connecting to MySQL:", e)
+
+    # Return an error code indicating a problem with the database
+    db_connection.close()
+    return 1
+
+
+# gets employee info only to obatain ID and update hourly rate and supervisor
+def get_building_id_info(username, password, building_name):
+
+    try:
+        # Assuming _db_connection is a function that returns a valid database connection
+        db_connection = _db_connection(username, password)
+
+        if not db_connection:
+            print("Error: Database connection is not established.")
+            return 1
+        
+        cursor = db_connection.cursor()
+
+        query = "SELECT * FROM Building WHERE Name = %s;"
+        params = (building_name,)
+
+        cursor.execute(query, params)
+
+        # Fetch the results if needed
+        result = cursor.fetchall()
+
+        db_connection.close()
+        cursor.close()
+
+        if result == []:
+
+            return 2, result
+
+        return 4, result  # Success
+
+    except Error as e:
+
         print("Error while connecting to MySQL", e)
-        return 1
     
+    return 1, None  # Failure with an error message
 
 # gets employee info only to obatain ID and update hourly rate and supervisor
 def get_employee_info(username, password, first, last):
     try:
         # Assuming _db_connection is a function that returns a valid database connection
-        with _db_connection(username, password) as db_connection:
-            cursor = db_connection.cursor()
+        db_connection = _db_connection(username, password)
 
-            query = "SELECT * FROM Employee WHERE FirstName = %s AND LastName = %s;"
-            params = (first, last)
+        if not db_connection:
+            print("Error: Database connection is not established.")
+            return 1
+        
+        cursor = db_connection.cursor(dictionary=True)
 
-            cursor.execute(query, params)
+        query = "SELECT * FROM Employee WHERE FirstName = %s AND LastName = %s;"
+        params = (first, last)
 
-            # Fetch the results if needed
-            result = cursor.fetchall()
+        cursor.execute(query, params)
 
-            if result == []:
-                return 2, result
+        # Fetch the results if needed
+        result = cursor.fetchall()
 
-        return 0, result  # Success
+        db_connection.close()
+        cursor.close()
+
+        if result == []:
+
+            return 2, result
+
+        return 4, result  # Success
 
     except Error as e:
+        db_connection.close()
+        cursor.close()
+
         print("Error while connecting to MySQL", e)
-        return 1, None  # Failure with an error message
+    
+    return 1, None  # Failure with an error message
 
 
 # updates info for anything
@@ -156,4 +219,5 @@ def update_info(username,password,update_sql,update_data):
         print(f"Error: {e}")
         cursor.close()
         db_connection.close()
-        return 1
+    
+    return 1

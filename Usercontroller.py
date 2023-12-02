@@ -27,31 +27,42 @@ def logged_user(username,password):
 # if user is logged in and saved in session
 def if_user_logged_in ():
 
-    # Checks is user is in DB
-    result = dao.checking_user( session['username'],session['password'])
+    if 'username' in session and 'password' in session:
+        # Checks is user is in DB
+        result = dao.checking_user( session['username'],session['password'])
 
-    # returns result 0 = success 1 = incorret account
+    else:
+
+        # 2 mean they never logged in
+        result =  2
+
+    # returns result 0 = success 1 = no persmission
     return result
 
 # get info fof tables requests for retriveing data fro viewing
 def get_info(tables):
 
-    # if user is logged in from session than return db
-    if logged_user(session['username'],session['password']) == 0:
-
+    if 'username' in session and 'password' in session:
+        # Checks is user is in DB
         result = dao.get_db_info(session['username'], session['password'],tables)
 
-    # return db or returns 1 for not logged in
-    return result
+    else:
 
+        # 2 mean they never logged in
+        result =  2
+
+    # returns result 0 = success 1 = no persmission
+    return result
 
 #_______________________________Animal Insert/Update___________________________________________________________
 
 # inserts new animal 
 def insert_animal(species_id, status, birth_year,enclosure_id):
 
+    result = if_user_logged_in()
+
     # checks if user is logged in
-    if if_user_logged_in(session['username'],session['password']) == 0:
+    if result == 0:
 
         # Insert data into the Animal table
         animal_data = [status, birth_year, species_id, enclosure_id]
@@ -62,14 +73,19 @@ def insert_animal(species_id, status, birth_year,enclosure_id):
         # calls DAO add to add animal
         result = dao.add(session['username'],session['password'],animal_sql,animal_data)
 
-        # returns 0 success 2 duplicate 1 Error with DB
-        return result
+
+        
+
+    # returns 0 success 2 never signed in 1 Error with DB 4 means duplicate
+    return result
         
 # updates animal with fields
 def update_animal(animal_id=None, species_id=None, new_status=None, new_birth_year=None, enclosure_id=None):
     
+    result = if_user_logged_in()
+
     # checks if user is logged
-    if if_user_logged_in(session['username'],session['password']) == 0:
+    if  result == 0:
 
         # sql update animal
         update_sql = "UPDATE Animal SET"
@@ -97,10 +113,11 @@ def update_animal(animal_id=None, species_id=None, new_status=None, new_birth_ye
         # Remove the trailing comma for sql
         update_sql = update_sql.rstrip(',')
 
-        # if the set is empty than return 2 and error nothing updated empty fields
+        # if the set is empty than return 3 and error nothing updated empty fields
         if update_animal == []:
 
-            return 2
+            # 3 means empty fields
+            return 3
         
         # where to say data according to ID
         update_sql += " WHERE ID = %s"
@@ -111,17 +128,20 @@ def update_animal(animal_id=None, species_id=None, new_status=None, new_birth_ye
         # Update animal
         result = dao.update_info(session['username'], session['password'], update_sql, update_animal)
 
-    # returns 0 success 2 doesn't exist 1 Error with DB
+   # returns 0 success 2 never signed in 1 Error with DB 
     return result
-
+    
+    
     
 #_______________________________Building Insert/Update___________________________________________________________    
 
 # inserts new building 
-def insert_building(building_name, building_type):
+def insert_building(building_name, building_type, enclosure, sq_ft):
+
+    result = if_user_logged_in()
 
     # checks if user is logged in
-    if if_user_logged_in(session['username'], session['password']) == 0:
+    if result == 0:
 
         # Insert data into the Building table
         building_data = [building_name, building_type]
@@ -132,14 +152,28 @@ def insert_building(building_name, building_type):
         # calls DAO add to add building
         result = dao.add(session['username'], session['password'], building_sql, building_data)
 
-        # returns 0 success 2 duplicate 1 Error with DB
-        return result
+        if enclosure == "yes":
+
+            result = dao.get_building_id_info(session['username'], session['password'], building_name)
+            
+            enclosure_data = [int(sq_ft), result[1][0][0]]
+
+            # SQL for inserting Building
+            enclosure_sql = """INSERT IGNORE INTO Enclosure (SquareFoot, BuildingID)VALUES (%s, %s);"""
+
+            
+            result = dao.add(session['username'], session['password'], enclosure_sql, enclosure_data)
+
+     # returns 0 success 2 never signed in 1 Error with DB 4 means duplicate
+    return result
 
 # updates Building with fields
 def update_building(building_id=None, building_name = None, type = None):
-    
+
+    result = if_user_logged_in()
+
     # checks if user is logged
-    if if_user_logged_in(session['username'],session['password']) == 0:
+    if result == 0:
 
         # sql update Building
         update_sql = "UPDATE Building SET"
@@ -162,7 +196,8 @@ def update_building(building_id=None, building_name = None, type = None):
         # if the set is empty than return 2 and error nothing updated empty fields
         if update_building == []:
 
-            return 2
+            # empty fields
+            return 3
         
         # where to say data according to ID
         update_sql += " WHERE ID = %s"
@@ -173,7 +208,7 @@ def update_building(building_id=None, building_name = None, type = None):
         # Update Building
         result = dao.update_info(session['username'], session['password'], update_sql, update_building)
 
-    # returns 0 success 2 doesn't exist 1 Error with DB
+    # returns 0 success 2 never signed in 1 Error with DB
     return result
 
 
@@ -182,8 +217,10 @@ def update_building(building_id=None, building_name = None, type = None):
 # inserts new employee 
 def insert_employee(first_name, last_name, minit, job_type, start_date, street, city, state, zip_code, supervisor,rate):
 
+    result = if_user_logged_in()
+
     # checks if user is logged in
-    if if_user_logged_in(session['username'], session['password']) == 0:
+    if result == 0:
 
         # checks if person already exists in db
         person = dao.get_employee_info(session['username'], session['password'], first_name, last_name)
@@ -235,18 +272,20 @@ def insert_employee(first_name, last_name, minit, job_type, start_date, street, 
         
         else:
             
-            # if user exist already
-            return 1
+            # 4 duplicate 1 error with db
+            return person[1]
+    
+    # 2 never signed in
+    return result
 
 
 # Update employee
 def update_employee(employee_id,job_type=None, street=None, city=None, state=None, zip_code=None, supervisor=None,rate=None):
 
-    # for return if everything is blank
-    result = 2
+    result = if_user_logged_in()
     
     # checks if user is logged in
-    if if_user_logged_in(session['username'],session['password']) == 0:
+    if result == 0:
 
          # SQL for updating employee
         update_sql = "UPDATE Employee SET"
@@ -278,17 +317,14 @@ def update_employee(employee_id,job_type=None, street=None, city=None, state=Non
         # Remove the trailing comma for sql
         update_sql = update_sql.rstrip(',')
 
-        # if the set is not empty than contiue
-        if update_employee != []:
+        # where to say data according to ID
+        update_sql += " WHERE ID = %s"
 
-            # where to say data according to ID
-            update_sql += " WHERE ID = %s"
+        # append data to saved data set
+        update_employee.append(employee_id)
 
-            # append data to saved data set
-            update_employee.append(employee_id)
-
-            # Update employee
-            result = dao.update_info(session['username'], session['password'], update_sql, update_employee)
+        # Update employee
+        result = dao.update_info(session['username'], session['password'], update_sql, update_employee)
          
         # if they are a now a supervisor
         if supervisor == "yes":
@@ -327,6 +363,12 @@ def update_employee(employee_id,job_type=None, street=None, city=None, state=Non
              # Assuming dao.add expects the SQL query first and then the data
             result = dao.update_info(session['username'], session['password'], update_sql, rate_data)
 
-    # returns 2 if user is not logged in our issue with input 
+        # if the set is not empty than contiue
+        if update_employee == []:
+            
+            # 3 means empty fields
+            return 3
+
+    # returns 0 success 2 never signed in 1 Error with DB 
     return result
     

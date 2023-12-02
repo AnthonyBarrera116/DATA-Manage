@@ -65,34 +65,33 @@ CREATE TABLE CaresForSpecies (
 
 -- Define the Building table
 CREATE TABLE Building (
-    ID INT PRIMARY KEY,
-    Name VARCHAR(255),
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(255) UNIQUE,
     Type VARCHAR(255)
 );
 
 -- Define the RevenueType table
 
 CREATE TABLE RevenueType (
-    ID INT PRIMARY KEY,
+    ID INT PRIMARY KEY AUTO_INCREMENT,
     Name VARCHAR(255),
     Type VARCHAR(255)
 );
 
 -- Define the RevenueEvents table
 CREATE TABLE RevenueEvents (
-    RevenueTypeID INT,
-    -- Attributes of weak entity RevenueEvents
+    RevenueTypeID INT AUTO_INCREMENT,
     Revenue DECIMAL(10, 2),
     TicketsSold INT,
     DateTime DATETIME,
-    PRIMARY KEY (RevenueTypeID),  -- Primary key including the foreign key
+    PRIMARY KEY (RevenueTypeID), 
     FOREIGN KEY (RevenueTypeID) REFERENCES RevenueType(ID)
 );
 
 -- Define the Enclosure table
 
 CREATE TABLE Enclosure (
-    ID INT PRIMARY KEY,
+    ID INT PRIMARY KEY AUTO_INCREMENT,
     SquareFoot INT,
     BuildingID INT,
     FOREIGN KEY (BuildingID) REFERENCES Building(ID)
@@ -170,4 +169,5 @@ CREATE TABLE AnimalShow (
     FOREIGN KEY (RevenueTypeID) REFERENCES RevenueType(ID),
     FOREIGN KEY (SpeciesID) REFERENCES Species(ID)
 );
+
 

@@ -1,5 +1,5 @@
 # imports for secret for Flask and flask libr
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for
 import secrets
 
 # Import User Controller
@@ -11,13 +11,13 @@ app = Flask(__name__, static_url_path='/static')
 # Replace with a strong and unique secret key
 app.secret_key = secrets.token_hex(16)
 
-
 #_______________________________Main Page___________________________________________________________
 
 # Main Page
 @app.route('/')
 def home():
-    session.clear()
+    
+    # returns mainpage
     return render_template('MainPage.html', message='')
 
 
@@ -34,15 +34,19 @@ def login_page():
 @app.route('/login', methods=['POST'])
 def login():
 
+    # gets username and passord from user
     entered_username = request.form.get('username')
     entered_password = request.form.get('password')
 
+    # checks if user can login with account inputed
     logged_in_checker = user.logged_user(entered_username,entered_password)
     
+    # success
     if logged_in_checker == 0:
 
         return redirect(url_for('Menu'))
     
+    # fail
     else:
         return redirect(url_for('login', error=logged_in_checker))
     
@@ -66,14 +70,14 @@ def animal_management():
     result = user.get_info(["animal","enclosure","species"])
 
     # db is connected and retireved empty db or had db info Handles with displaying of no data in html file
-    if result != 1 :
+    if result != 1 and  result != 2:
         
         return render_template('AnimalManagement.html',records = result)
     
     # Not signed in
     else:
         
-        return redirect(url_for('login_page', error=1))
+        return redirect(url_for('login_page', error=result))
 
 
 # Inserts new Animal
@@ -88,7 +92,7 @@ def insert_new_animal():
     birth_year = request.form.get('birth_year')
     enclosure_id = request.form.get('enclosure_id')
 
-    # Sends to controller 0 = success, 1 = user not logged in (SHOULDN't HAVE ACCESS) and 2 = nothing was updated, wrong ID, or already exists
+    # Sends to controller 0 = success, 1 = Error with  2 = never singed in
     result = user.insert_animal(species_id, status, birth_year,enclosure_id)
 
     # Success
@@ -97,14 +101,14 @@ def insert_new_animal():
         return redirect(url_for('Menu'))
     
     # Not logged in
-    elif result == 1:
-            
-        return redirect(url_for('Employee_management',error=result))
-        
-    # Error with inputs
     elif result == 2:
             
-        return redirect(url_for('Employee_management',error=result))
+        return redirect(url_for('login',error=result))
+        
+    # Error with inputs
+    else:
+            
+        return redirect(url_for('animal_management',error=result))
     
 
 
@@ -130,12 +134,12 @@ def update_animal_info():
         return redirect(url_for('Menu'))
     
     # Not logged in
-    elif result == 1:
+    elif result == 2:
             
             return redirect(url_for('login', error=result))
     
     # Error with inputs
-    elif result == 2:
+    else:
             
             return redirect(url_for('animal_management',error=result))
     
@@ -147,10 +151,10 @@ def update_animal_info():
 def Employee_management():
     
     # retirevs info from db 0 = data is available and sent to html page 1 = not data in dd 
-    result = user.get_info(["Employee","hourlyrate","supervises"])
+    result = user.get_info(["employee","hourlyrate","supervises"])
 
     # db is connected and retireved empty db or had db info Handles with displaying of no data in html file
-    if result != 1 :
+    if result != 1 and  result != 2:
         
         return render_template('EmployeeManagement.html',records = result)
     
@@ -188,12 +192,12 @@ def insert_new_Employee():
         return redirect(url_for('Menu'))
         
     # Not logged in
-    elif result == 1:
+    elif result == 2:
             
         return redirect(url_for('login', error=result))
     
     # Error with inputs
-    elif result == 2:
+    else:
             
         return redirect(url_for('Employee_management',error=result))
 
@@ -224,12 +228,12 @@ def update_Employee_info():
         return redirect(url_for('Menu'))
     
     # Not logged in
-    elif result == 1:
+    elif result == 2:
             
             return redirect(url_for('login', error=result))
     
     # Error with inputs
-    elif result == 2:
+    else:
             
             return redirect(url_for('Employee_management',error=result))
     
@@ -243,10 +247,10 @@ def update_Employee_info():
 def building_management():
     
     # retirevs info from db 0 = data is available and sent to html page 1 = not data in dd 
-    result = user.get_info(["building","revenuetype","enclosure","host"])
+    result = user.get_info(["building","enclosure"])
 
     # db is connected and retireved empty db or had db info Handles with displaying of no data in html file
-    if result != 1 :
+    if result != 1 and  result != 2:
 
         return render_template('BuildingManagement.html',records = result)
     
@@ -265,9 +269,11 @@ def insert_new_building():
     # Requests values from HTML FILE
     building_name= request.form.get('name_building')
     type = request.form.get('type')
+    enclosure= request.form.get('enclosure')
+    sq_ft = request.form.get('sq_ft')
 
     # Sends to controller 0 = success, 1 = user not logged in (SHOULDN't HAVE ACCESS) and 2 = nothing was updated, wrong ID, or already exists
-    result = user.insert_building(building_name, type)
+    result = user.insert_building(building_name, type, enclosure, sq_ft)
 
     # Success
     if result == 0:
@@ -275,14 +281,16 @@ def insert_new_building():
         return redirect(url_for('Menu'))
         
     # Not logged in
-    elif result == 1:
+    elif result == 2:
             
         return redirect(url_for('login', error=result))
     
     # Error with inputs
-    elif result == 2:
+    else:
             
         return redirect(url_for('building_management',error=result))
+    
+
 
 
 # Updates Building info 
@@ -306,18 +314,105 @@ def update_building_info():
         return redirect(url_for('Menu'))
         
     # Not logged in
-    elif result == 1:
+    elif result == 2:
             
         return redirect(url_for('login', error=result))
     
     # Error with inputs
-    elif result == 2:
+    else:
             
         return redirect(url_for('building_management',error=result))
+
+
+#_______________________________Attraction Insert/Update___________________________________________________________
+
+# Routes to Animal Management Page and displays all info of animal info
+@app.route('/AttractionManagement', methods=['POST',"GET"])
+def attraction_management():
+    
+    # retirevs info from db 0 = data is available and sent to html page 1 = not data in dd 
+    result = user.get_info(["AnimalShow","species"])
+
+    # db is connected and retireved empty db or had db info Handles with displaying of no data in html file
+    if result != 1 and  result != 2:
+        
+        return render_template('AttractionManagement.html',records = result)
+    
+    # Error with account = 1 or never logged in = 3
+    else:
+        
+        return redirect(url_for('login_page', error=result))
+
+
+# Inserts new Animal
+# Ask all fields below. ID is incremented
+# ALL INPUTS MUST BE PUT INTO THE FIELD
+@app.route('/InsertAttraction', methods=['POST'])
+def insert_new_attraction():
+
+    # Requests values from HTML FILE
+    species_id = request.form.get('species_ID')
+    status = request.form.get('status')
+    birth_year = request.form.get('birth_year')
+    enclosure_id = request.form.get('enclosure_id')
+
+    # Sends to controller 0 = success, 1 = Error with  2 = never singed in
+    result = user.insert_animal(species_id, status, birth_year,enclosure_id)
+
+    # Success
+    if result == 0:
+         
+        return redirect(url_for('Menu'))
+    
+    # Not logged in
+    elif result == 2:
+            
+        return redirect(url_for('login',error=result))
+        
+    # Error with inputs
+    else:
+            
+        return redirect(url_for('Employee_management',error=result))
+    
+
+
+# Updates Animal info 
+# CHANGING OF DB ARE ANIMAL SPEICES,STATUS,BIRTH YEAR, AND ENCLOSURE ID
+# VALUES CAN BE LEFT EMPTY AND WILL ONLY UPDATES FIELDS INPUTED BESIDES ID
+@app.route('/UpdateAnimal', methods=['POST'])
+def update_attraction_info():
+
+    # Requests values from HTML FILE
+    animal_id = request.form.get('animal_ID')
+    species_id = request.form.get('species_ID')
+    status = request.form.get('status')
+    birth_year = request.form.get('birth_year')
+    enclosure_id = request.form.get('enclosure_id')
+
+     # Sends to controller 0 = success, 1 = Error with  2 = never singed in
+    result = user.update_animal(animal_id,species_id,status,birth_year,enclosure_id)
+    
+    # Success
+    if result == 0:
+         
+        return redirect(url_for('Menu'))
+    
+    # Not logged in
+    elif result == 2:
+            
+            return redirect(url_for('login', error=result))
+    
+    # Error with inputs
+    else:
+            
+            return redirect(url_for('animal_management',error=result))
+    
+
 
 #__________________________________________Main________________________________________________________________
 
 # Main code running
 if __name__ == '__main__':
+
     app.run(debug=True)
-    session.clear()
+    
