@@ -2,7 +2,7 @@
 
 # Steps:
 1. clone repository 
-2. pip install FDlask and my-sql-connector-python
+2. pip install Flask and mysql-connector-python
 3. make sure you are local hosting your db and has right port number
 4. run the code 
 * NOTE: it should come up with 
