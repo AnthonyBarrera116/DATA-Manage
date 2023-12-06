@@ -17,207 +17,209 @@ def _db_connection(username, password):
             database="zoo",
             port=3306
         )
+
         if connection.is_connected():
+
             print("Connected to MySQL")
+
             return connection
         
     # error connecting
     except Error as e:
+
         print("Error while connecting to MySQL", e)
-    
-    return 1
 
-# Close the database connection
-def close_connection(connection):
-
-    if connection.is_connected():
-
-        connection.close()
-
-        print("MySQL connection closed")
+        return 1
 
 # checks if user is in db and closes 0 sucess 1 doesn't exist
 def checking_user(username,password):
 
-    try:
+    connection = _db_connection(username,password)
 
-        db_connection = _db_connection(username,password)
-            
-        db_connection.close()
-
-        return 0
-        
-    except:
+    if connection == 1:
 
         return 1
+
+    else:
+        connection.close()
+
+        return 0
+
+def get_db_info(username, password, tables):
+
+    try:
+
+        # Assuming _db_connection is a function that returns a valid database connection
+        connection = _db_connection(username, password)
+
+        cursor = connection.cursor(dictionary=True)
+
+        db_table_info = {}
+
+        for table in tables:
+
+            query = f"SELECT * FROM {table}"
+
+            cursor.execute(query)
+
+            records = cursor.fetchall()
+
+            db_table_info[table] = records
+
+        if db_table_info[tables[0]] != []:
+
+            connection.close()
+
+            return 0, db_table_info
+        
+        connection.close()      
+        
+        return 3, db_table_info
+
+    except Exception as e:
+
+        # Log the error instead of printing
+
+        print(f"Error: {e}")
+
+        connection.close()
+        
+        cursor.close()
+
+        return 1 , None # Other errors
+
+
+# gets employee info only to obatain ID and update hourly rate and supervisor
+def get_info(username, password, query, params):
+
+    try:
+        # Assuming _db_connection is a function that returns a valid database connection
+        connection = _db_connection(username, password)
+        
+        if not connection.is_connected():
+
+            return 1, None
+
+        cursor = connection.cursor(dictionary=True)
+
+        cursor.execute(query, params)
+
+        # Fetch the results if needed
+        result = cursor.fetchall()
+
+        connection.close()
+
+        if cursor.rowcount > 0:
+            
+            return 4, result  
+        
+        
+        connection.close()
+
+        cursor.close()
+
+        return 6, None
+
+
+    except Error as e:
+        connection.close()
+        cursor.close()
+
+        print("Error while connecting to MySQL", e)
+    
+        return 7, None  # Failure with an error message
 
 def add(username, password, sql, data):
 
     try:
 
         # Assuming _db_connection is a function that returns a valid database connection
-        db_connection = _db_connection(username, password)
+        connection = _db_connection(username, password)
 
-        cursor = db_connection.cursor()
+        if not connection.is_connected():
+
+            return 1
+
+        cursor = connection.cursor()
 
         cursor.execute(sql, tuple(data))
 
         # Commit the changes
-        db_connection.commit()
+        connection.commit()
 
         affected_rows = cursor.rowcount
 
         if affected_rows > 0:
 
+            connection.close()
 
-            db_connection.close()
             cursor.close()
+
             return 0  # Success
-        else:
+        
+        
 
-            db_connection.close()
-            cursor.close()
-            return 4  # No rows affected (possible duplicate)
+        connection.close()
+
+        cursor.close()
+
+        return 4  # No rows affected (possible duplicate)
 
     except Exception as e:
+
         # Log the error instead of printing
+
         print(f"Error: {e}")
-        # Return a specific error code or raise an exception based on your needs
-        db_connection.close()
-        cursor.close()
-        return 1  # Other errors
 
-    
-# Retrives data from certain tables passed through
-from mysql.connector import Error
-
-def get_db_info(username, password, tables):
-    try:
-        # Assuming _db_connection is a function that returns a valid database connection
-        db_connection = _db_connection(username, password)
-
-        if not db_connection:
-            print("Error: Database connection is not established.")
-            return 1
-
-        cursor = db_connection.cursor(dictionary=True)
-
-        list_of_all = {}
-
-        for table in tables:
-            query = f"SELECT * FROM {table}"
-            cursor.execute(query)
-            records = cursor.fetchall()
-            list_of_all[table] = records
-
-        if list_of_all[tables[0]] != []:
-            db_connection.close()
-            return list_of_all
-
-    except Error as e:
-        print("Error while connecting to MySQL:", e)
-
-    # Return an error code indicating a problem with the database
-    db_connection.close()
-    return 1
-
-
-# gets employee info only to obatain ID and update hourly rate and supervisor
-def get_building_id_info(username, password, building_name):
-
-    try:
-        # Assuming _db_connection is a function that returns a valid database connection
-        db_connection = _db_connection(username, password)
-
-        if not db_connection:
-            print("Error: Database connection is not established.")
-            return 1
+        connection.close()
         
-        cursor = db_connection.cursor()
-
-        query = "SELECT * FROM Building WHERE Name = %s;"
-        params = (building_name,)
-
-        cursor.execute(query, params)
-
-        # Fetch the results if needed
-        result = cursor.fetchall()
-
-        db_connection.close()
         cursor.close()
+        return 7  # Other errors
 
-        if result == []:
-
-            return 2, result
-
-        return 4, result  # Success
-
-    except Error as e:
-
-        print("Error while connecting to MySQL", e)
     
-    return 1, None  # Failure with an error message
-
-# gets employee info only to obatain ID and update hourly rate and supervisor
-def get_employee_info(username, password, first, last):
-    try:
-        # Assuming _db_connection is a function that returns a valid database connection
-        db_connection = _db_connection(username, password)
-
-        if not db_connection:
-            print("Error: Database connection is not established.")
-            return 1
-        
-        cursor = db_connection.cursor(dictionary=True)
-
-        query = "SELECT * FROM Employee WHERE FirstName = %s AND LastName = %s;"
-        params = (first, last)
-
-        cursor.execute(query, params)
-
-        # Fetch the results if needed
-        result = cursor.fetchall()
-
-        db_connection.close()
-        cursor.close()
-
-        if result == []:
-
-            return 2, result
-
-        return 4, result  # Success
-
-    except Error as e:
-        db_connection.close()
-        cursor.close()
-
-        print("Error while connecting to MySQL", e)
-    
-    return 1, None  # Failure with an error message
-
 
 # updates info for anything
 def update_info(username,password,update_sql,update_data):
 
     try:
 
-        db_connection = _db_connection(username, password)
+        connection = _db_connection(username, password)
 
-        cursor = db_connection.cursor()
+        if not connection.is_connected():
+
+            return 1
+        
+        cursor = connection.cursor()
 
         # Execute the SQL query
         cursor.execute(update_sql, tuple(update_data))
 
         # Commit the changes and close the cursor and connection
-        db_connection.commit()
-        cursor.close()
-        db_connection.close()
+        connection.commit()
+        
+        affected_rows = cursor.rowcount
 
-        return 0
+        if affected_rows > 0:
+
+            connection.close()
+
+            cursor.close()
+
+            return 0  # Success
+        
+        else:
+
+            connection.close()
+
+            cursor.close()
+
+            return 6  # Doesn't exist
+
 
     except Exception as e:
+
         print(f"Error: {e}")
         cursor.close()
-        db_connection.close()
+        connection.close()
     
-    return 1
+        return 7

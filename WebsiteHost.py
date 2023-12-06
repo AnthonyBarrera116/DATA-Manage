@@ -39,7 +39,7 @@ def login():
     entered_password = request.form.get('password')
 
     # checks if user can login with account inputed
-    logged_in_checker = user.logged_user(entered_username,entered_password)
+    logged_in_checker = user.logging_in(entered_username,entered_password)
     
     # success
     if logged_in_checker == 0:
@@ -70,14 +70,15 @@ def animal_management():
     result = user.get_info(["animal","enclosure","species"])
 
     # db is connected and retireved empty db or had db info Handles with displaying of no data in html file
-    if result != 1 and  result != 2:
+    
+    if int(result[0]) == 0:
         
-        return render_template('AnimalManagement.html',records = result)
+        return render_template('AnimalManagement.html',records = result[1])
     
     # Not signed in
     else:
         
-        return redirect(url_for('login_page', error=result))
+        return redirect(url_for('login_page', error=result[0]))
 
 
 # Inserts new Animal
@@ -127,6 +128,8 @@ def update_animal_info():
 
     # Sends to controller 0 = success, 1 = user not logged in (SHOULDN't HAVE ACCESS) and 2 = nothing was updated, wrong ID, or already exists
     result = user.update_animal(animal_id,species_id,status,birth_year,enclosure_id)
+
+    print(result)
     
     # Success
     if result == 0:
@@ -154,15 +157,14 @@ def Employee_management():
     result = user.get_info(["employee","hourlyrate","supervises"])
 
     # db is connected and retireved empty db or had db info Handles with displaying of no data in html file
-    if result != 1 and  result != 2:
+    if int(result[0]) == 0:
         
-        return render_template('EmployeeManagement.html',records = result)
+        return render_template('EmployeeManagement.html',records = result[1])
     
     # Not signed in
     else:
 
-        return redirect(url_for('login_page', error=result))
-
+        return redirect(url_for('login_page', error=result[0]))
 
 # Inserts new Employee
 # Ask all fields below. ID is incremented
@@ -250,14 +252,14 @@ def building_management():
     result = user.get_info(["building","enclosure"])
 
     # db is connected and retireved empty db or had db info Handles with displaying of no data in html file
-    if result != 1 and  result != 2:
+    if int(result[0]) == 0:
 
-        return render_template('BuildingManagement.html',records = result)
+        return render_template('BuildingManagement.html',records = result[1])
     
     # Not signed in
     else:
         
-        return redirect(url_for('login_page', error=result))
+        return redirect(url_for('login_page', error=result[0]))
 
 
 # Inserts new Building
