@@ -1,9 +1,8 @@
+# sql and data for inserting employee
 def employee_insert_schema(first_name, last_name, minit, job_type, start_date, street, city, state, zip_code):
 
-    # Insert data into the Building table
     employee_data = [first_name, last_name, minit, job_type, start_date, street, city, state, zip_code]
 
-    # sql for inserting
     employee_sql = """
                 INSERT IGNORE INTO Employee (FirstName, LastName, Minit, JobType, StartDate, Street, City, State, Zip) 
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
@@ -11,7 +10,7 @@ def employee_insert_schema(first_name, last_name, minit, job_type, start_date, s
 
     return employee_sql, employee_data
 
-
+# sql and data fro employee by name
 def employee_info_by_name(first_name,last_name):
 
     employee_data = [first_name,last_name]
@@ -21,25 +20,82 @@ def employee_info_by_name(first_name,last_name):
     
     return employee_sql, employee_data
 
-
+# sql and data insert for new employee
 def hourly_insert_schema(employee_id, rate):
 
-    # Insert data into the Building table
     hourly_data = [employee_id,rate]
 
-    # sql for inserting
     hourly_rate_sql = """INSERT IGNORE INTO hourlyrate (ID,RateEarned) 
                             VALUES (%s,%s);"""
 
     return hourly_rate_sql, hourly_data
 
+# sql and data for inserting new supervisor
 def insert_supervisor(id_person):
 
-    # obtains user ID
     supervisor_data = [id_person,]
 
-    # adds user to supervisor list
     supervisor_sql = """INSERT IGNORE INTO supervises (SupervisorID) 
                                         VALUES (%s);"""
     
     return supervisor_sql, supervisor_data
+
+# sql and data for updating employee
+def employee_update_schema(employee_id, job_type, street, city, state, zip_code):
+    
+
+    update_sql = "UPDATE Employee SET"
+
+    
+    update_employee = []
+
+    
+    if job_type != "":
+        update_sql += " JobType = %s,"
+        update_employee.append(job_type)
+
+    if street != "":
+        update_sql += " Street = %s,"
+        update_employee.append(street)
+
+    if city != "":
+        update_sql += " City = %s,"
+        update_employee.append(city)
+
+    if state != "":
+        update_sql += " State = %s,"
+        update_employee.append(state)
+
+    if zip_code != "":
+        update_sql += " Zip = %s,"
+        update_employee.append(zip_code)
+
+    update_sql = update_sql.rstrip(',')
+
+    if update_employee == []:
+
+        return update_sql, update_employee
+
+    update_sql += " WHERE id = %s"
+
+    update_employee.append(employee_id)
+
+    return update_sql, update_employee
+
+
+def delete_supervisor(employee_id):
+            
+    supervisor_data = [employee_id]
+
+    supervisor_sql = """DELETE FROM supervises WHERE SupervisorID = %s;"""
+
+    return supervisor_sql, supervisor_data
+
+
+def update_rate(rate, employee_id):
+
+    houlry_data = [rate, employee_id,]
+
+    houlry_sql = "UPDATE hourlyrate SET RateEarned = %s WHERE ID = %s"
+
+    return houlry_sql, houlry_data

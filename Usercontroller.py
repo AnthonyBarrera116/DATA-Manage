@@ -218,6 +218,8 @@ def insert_employee(first_name, last_name, minit, job_type, start_date, street, 
     # checks if user is logged in
     if logged_check == 0:
 
+        # if rate isnt a digit then you have a probelm of a possible string inputed not an integer
+        # 7 = constraint fail
         if not rate.isdigit():
 
             return 7
@@ -274,104 +276,53 @@ def insert_employee(first_name, last_name, minit, job_type, start_date, street, 
 # Update employee
 def update_employee(employee_id,job_type=None, street=None, city=None, state=None, zip_code=None, supervisor=None,rate=None):
 
-    result = if_user_logged_in()
-    
-    # checks if user is logged in
-    if result == 0:
+    # returns 0 = user is logged in 2 = never logged in
+    logged_check = if_user_logged_in()
 
-        query = "SELECT * FROM Employee WHERE ID = %s;"
-        params = (int(employee_id),)
+    # checks if user is logged
+    if  logged_check == 0:
 
-        employee_info = dao.get_employee_info(session['username'], session['password'],query,params)
+        update_employee_schema = e_schema.employee_update_schema(employee_id,job_type, street, city, state, zip_code)
+        
 
-        print(employee_info[0])
+        # Nothing updated fields inputed (empty fields)
+        if update_employee_schema[1] != []:
 
-        if employee_info[0] == 2:
+            # Update employee
+            result_update_employee = dao.update_info(session['username'], session['password'], update_employee_schema[0], update_employee_schema[1])
 
-            return 3
-
-        # SQL for updating employee
-        update_sql = "UPDATE Employee SET"
-
-        # Building data saved for sql
-        update_employee = []
-
-        # if staments are used to put in data the user has inputed empty fields will be ignored
-        if job_type is not "":
-            update_sql += " JobType = %s,"
-            update_employee.append(job_type)
-
-        if street is not "":
-            update_sql += " Street = %s,"
-            update_employee.append(street)
-
-        if city is not "":
-            update_sql += " City = %s,"
-            update_employee.append(city)
-
-        if state is not "":
-            update_sql += " State = %s,"
-            update_employee.append(state)
-
-        if zip_code is not "":
-            update_sql += " Zip = %s,"
-            update_employee.append(zip_code)
-
-        # Remove the trailing comma for sql
-        update_sql = update_sql.rstrip(',')
-
-        # where to say data according to ID
-        update_sql += " WHERE ID = %s"
-
-        # append data to saved data set
-        update_employee.append(employee_id)
-
-        # Update employee
-        result = dao.update_info(session['username'], session['password'], update_sql, update_employee)
-         
         # if they are a now a supervisor
         if supervisor == "yes":
 
-            # obtains user ID
-            supervisor_data = [employee_id]
-            
-            # adds user to supervisor list
-            supervisor_sql = """INSERT IGNORE INTO supervises (SupervisorID) 
-                                VALUES (%s);"""
+            update_supervisor_schema = e_schema.insert_supervisor(employee_id)
 
             # Assuming dao.add expects the SQL query first and then the data
-            result = dao.add(session['username'], session['password'], supervisor_sql, supervisor_data)
+            update_sp_result = dao.add(session['username'], session['password'], update_supervisor_schema[0], update_supervisor_schema[1])
+
+            return update_sp_result
 
         # if they a super visor and no longer
         elif supervisor == "no":
             
-            # obtains user ID
-            supervisor_data = [employee_id]
-
-            # deletes user to supervisor list
-            supervisor_sql = """DELETE FROM supervises WHERE SupervisorID = %s;"""
+            delete_supervisor_schema = e_schema.delete_supervisor(employee_id)
 
             # Assuming dao.add expects the SQL query first and then the data
-            result = dao.add(session['username'], session['password'], supervisor_sql, supervisor_data)
+            delete_sp_result = dao.add(session['username'], session['password'], delete_supervisor_schema[0], delete_supervisor_schema[1])
+
+            return delete_sp_result
 
         # if new hourly rate is place than update
-        if rate is not "":
+        if rate is not " ":
 
-            # obtains user ID
-            rate_data = [rate, employee_id]
-
-            # adds user to hourlyrate list
-            update_sql = "UPDATE hourlyrate SET RateEarned = %s WHERE ID = %s"
+            update_houlry_schema = e_schema.update_rate(rate, employee_id)
 
              # Assuming dao.add expects the SQL query first and then the data
-            result = dao.update_info(session['username'], session['password'], update_sql, rate_data)
+            update_hourly_result = dao.update_info(session['username'], session['password'], update_houlry_schema[0], update_houlry_schema[1])
 
-        # if the set is not empty than contiue
-        if update_employee == []:
-            
-            # 3 means empty fields
-            return 3
+            return update_hourly_result
+
+        return result_update_employee
 
     # returns 0 success 2 never signed in 1 Error with DB 
-    return result
+    return logged_check
     
