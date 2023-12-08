@@ -21,23 +21,37 @@ def employee_info_by_name(first_name,last_name):
     return employee_sql, employee_data
 
 # sql and data insert for new employee
-def hourly_insert_schema(employee_id, rate):
+def hourly_insert_schema(rate):
 
-    hourly_data = [employee_id,rate]
+    hourly_data = [rate]
 
-    hourly_rate_sql = """INSERT IGNORE INTO hourlyrate (ID,RateEarned) 
+    hourly_rate_sql = """INSERT IGNORE INTO hourlyrate (RateEarned, ID) 
                             VALUES (%s,%s);"""
 
     return hourly_rate_sql, hourly_data
 
 # sql and data for inserting new supervisor
-def insert_supervisor(id_person):
+def insert_supervisor(employee_ID= None):
 
-    supervisor_data = [id_person,]
+    if employee_ID != None:
+         
+        supervisor_data = [employee_ID]
+
+    else:
+        supervisor_data = []
 
     supervisor_sql = """INSERT IGNORE INTO supervises (SupervisorID) 
                                         VALUES (%s);"""
     
+    return supervisor_sql, supervisor_data
+
+
+def delete_supervisor(employee_id):
+            
+    supervisor_data = [employee_id]
+
+    supervisor_sql = """DELETE FROM supervises WHERE SupervisorID = %s;"""
+
     return supervisor_sql, supervisor_data
 
 # sql and data for updating employee
@@ -82,14 +96,6 @@ def employee_update_schema(employee_id, job_type, street, city, state, zip_code)
 
     return update_sql, update_employee
 
-
-def delete_supervisor(employee_id):
-            
-    supervisor_data = [employee_id]
-
-    supervisor_sql = """DELETE FROM supervises WHERE SupervisorID = %s;"""
-
-    return supervisor_sql, supervisor_data
 
 
 def update_rate(rate, employee_id):

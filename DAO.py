@@ -45,11 +45,11 @@ def checking_user(username,password):
 
         return 0
 
+#ge info form database 0 = success 1 = DB connection  3 = empty db
 def get_db_info(username, password, tables):
 
     try:
 
-        # Assuming _db_connection is a function that returns a valid database connection
         connection = _db_connection(username, password)
 
         cursor = connection.cursor(dictionary=True)
@@ -78,22 +78,20 @@ def get_db_info(username, password, tables):
 
     except Exception as e:
 
-        # Log the error instead of printing
-
         print(f"Error: {e}")
 
         connection.close()
         
         cursor.close()
 
-        return 1 , None # Other errors
+        return 1 , None
 
 
-# gets employee info only to obatain ID and update hourly rate and supervisor
+# get info of person/ building/ employee/ attration 1 = connection error 4 = duplicate/exist 6 = doesn't exist 7 = constraint error
 def get_info(username, password, query, params):
 
     try:
-        # Assuming _db_connection is a function that returns a valid database connection
+        
         connection = _db_connection(username, password)
         
         if not connection.is_connected():
@@ -104,14 +102,13 @@ def get_info(username, password, query, params):
 
         cursor.execute(query, params)
 
-        # Fetch the results if needed
         result = cursor.fetchall()
 
         connection.close()
 
         if cursor.rowcount > 0:
             
-            return 4, result  
+            return 3, result  
         
         
         connection.close()
@@ -127,59 +124,10 @@ def get_info(username, password, query, params):
 
         print("Error while connecting to MySQL", e)
     
-        return 7, None  # Failure with an error message
+        return 7, None
 
-def add(username, password, sql, data):
-
-    try:
-
-        # Assuming _db_connection is a function that returns a valid database connection
-        connection = _db_connection(username, password)
-
-        if not connection.is_connected():
-
-            return 1
-
-        cursor = connection.cursor()
-
-        cursor.execute(sql, tuple(data))
-
-        # Commit the changes
-        connection.commit()
-
-        affected_rows = cursor.rowcount
-
-        if affected_rows > 0:
-
-            connection.close()
-
-            cursor.close()
-
-            return 0  # Success
-        
-        
-
-        connection.close()
-
-        cursor.close()
-
-        return 4  # No rows affected (possible duplicate)
-
-    except Exception as e:
-
-        # Log the error instead of printing
-
-        print(f"Error: {e}")
-
-        connection.close()
-        
-        cursor.close()
-        return 7  # Other errors
-
-    
-
-# updates info for anything
-def update_info(username,password,update_sql,update_data):
+# add to database 0 = success 1 = connection error 4 = duplicate 7 = constraint 
+def add_update(username, password, sql_list, data_list,operation):
 
     try:
 
@@ -188,38 +136,64 @@ def update_info(username,password,update_sql,update_data):
         if not connection.is_connected():
 
             return 1
-        
+
         cursor = connection.cursor()
 
-        # Execute the SQL query
-        cursor.execute(update_sql, tuple(update_data))
+        id = ""
+        
 
-        # Commit the changes and close the cursor and connection
+        for number, (sql, data) in enumerate(zip(sql_list, data_list), start=0):
+
+            print(sql)
+
+            print(data)
+
+            if (operation == "insert building/enclosure" and number != 0):
+                
+                data += (id, )
+
+                cursor.execute(sql,tuple(data))
+                
+
+            elif (operation == "employee insert/rate/supervisor" and number != 0):
+                
+                data += (id, )
+                
+                print(sql)
+
+                print(data)
+
+                cursor.execute(sql,tuple(data))
+
+
+            elif (operation == "insert revenuetype/attraction" and number != 0):
+
+                data += (id, )
+
+                cursor.execute(sql,tuple(data))
+                
+            else:
+                cursor.execute(sql,tuple(data))
+
+                cursor.fetchall()
+                
+                id = cursor.lastrowid
+
+                if cursor.rowcount == 0:
+
+                    return 3
+
         connection.commit()
-        
-        affected_rows = cursor.rowcount
 
-        if affected_rows > 0:
-
-            connection.close()
-
-            cursor.close()
-
-            return 0  # Success
-        
-        else:
-
-            connection.close()
-
-            cursor.close()
-
-            return 6  # Doesn't exist
+        return 0 
 
 
     except Exception as e:
 
         print(f"Error: {e}")
-        cursor.close()
+
         connection.close()
-    
-        return 7
+        
+        cursor.close()
+        return 4
+

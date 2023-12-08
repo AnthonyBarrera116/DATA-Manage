@@ -159,6 +159,7 @@ CREATE TABLE ZooAdmission (
 
 -- Define the AnimalShow table (Including Relationship with Species and Subclass to RevenueType)
 CREATE TABLE AnimalShow (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
     SeniorPrice DECIMAL(10, 2),
     AdultPrice DECIMAL(10, 2),
     ChildPrice DECIMAL(10, 2),

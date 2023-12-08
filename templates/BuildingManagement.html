@@ -31,7 +31,7 @@
                 </select><br>
 
                 <label for="sq_ft">Sq ft:</label>
-                <input type="text" id="sq_ft" name="sq_ft" ><br>
+                <input type="number" id="sq_ft" name="sq_ft" ><br>
 
                 <button type="submit">Insert Building</button>
             </form>
@@ -42,7 +42,7 @@
             <form action="/UpdateBuilding" method="post">
                 <p>Enter Animal ID to update that animal</p>
                 <label for="building_ID">Building ID:</label>
-                <input type="text" id="building_ID" name="building_ID" ><br>
+                <input type="text" id="building_ID" name="building_ID" required ><br>
         
                 <p>Enter the fields that need to be updated associated with the animal ID above</p>
                 <p>If you only need to update one field, leave the rest blank and enter new info in that field</p>

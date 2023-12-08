@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insert Animal</title>
+    <title>Employee Management </title>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
     
 </head>
@@ -43,7 +43,7 @@
                 <input type="text" id="state" name="state" required><br>
 
                 <label for="zip">ZIP:</label>
-                <input type="text" id="zip" name="zip" maxlength="10" required><br>
+                <input type="number" id="zip" name="zip" maxlength="10" required><br>
 
                 <label for="supervisor">Supervisor:</label>
                 <select id="supervisor" name="supervisor" required>
@@ -52,7 +52,7 @@
                 </select><br>
 
                 <label for="rate">Hourly Rate:</label>
-                <input type="text" id="rate" name="rate" maxlength="10" required><br>
+                <input type="number" id="rate" name="rate" maxlength="10" required><br>
 
                 <button type="submit">Insert Employee</button>
             </form>
@@ -92,17 +92,6 @@
 
                 <label for="update_rate">Hourly Rate:</label>
                 <input type="text" id="update_rate" name="update_rate" maxlength="10"><br>
-
-                <button type="submit">Update Employee</button>
-            </form>
-        </div>
-
-        <div class="form-section">
-            <h1>Update Employee</h1>
-            <form action="/DeleteEmployee" method="post">
-                <p>Enter Employee ID to update that employee</p>
-                <label for="employee_ID">Employee ID:</label>
-                <input type="text" id="employee_ID" name="employee_ID" required><br>
 
                 <button type="submit">Update Employee</button>
             </form>

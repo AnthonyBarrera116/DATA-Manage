@@ -1,22 +1,14 @@
 # sql and data to update animal
-def animal_update_schema (animal_id=None, species_id=None, new_status=None, new_birth_year=None, enclosure_id=None):
+def animal_update_schema (animal_id, new_status=None, enclosure_id=None):
 
     animal_sql = "UPDATE Animal SET"
 
     animal_data = []
 
-    if species_id is not "":
-        animal_sql += " SpeciesID = %s,"
-        animal_data.append(species_id)
-
     if new_status is not "":
         animal_sql += " Status = %s,"
         animal_data.append(new_status)
-
-    if new_birth_year is not "":
-        animal_sql += " BirthYear = %s,"
-        animal_data.append(new_birth_year)
-
+        
     if enclosure_id is not "":
         animal_sql += " EnclosureID = %s,"
         animal_data.append(enclosure_id)

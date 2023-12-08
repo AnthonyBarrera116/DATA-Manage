@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insert Animal</title>
+    <title> Animal Management </title>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
     
 </head>
@@ -22,7 +22,7 @@
             <form action="/InsertAnimal" method="post">
                 <!-- Insert form fields here -->
                 <label for="species_ID">Species ID:</label>
-                <input type="text" id="species_ID" name="species_ID" required><br>
+                <input type="number" id="species_ID" name="species_ID" required><br>
         
                 <label for="status">Status:</label>
                 <input type="text" id="status" name="status" required><br>
@@ -43,18 +43,13 @@
                 <!-- Update form fields here -->
                 <p>Enter Animal ID to update that animal</p>
                 <label for="animal_ID">Animal ID:</label>
-                <input type="text" id="animal_ID" name="animal_ID" ><br>
+                <input type="number" id="animal_ID" name="animal_ID" required><br>
         
                 <p>Enter the fields that need to be updated associated with the animal ID above</p>
                 <p>If you only need to update one field, leave the rest blank and enter new info in that field</p>
-                <label for="update_species_ID">Species ID:</label>
-                <input type="text" id="update_species_ID" name="species_ID" ><br>
         
                 <label for="update_status">Status:</label>
                 <input type="text" id="update_status" name="status" ><br>
-        
-                <label for="update_birth_year">Birth Year:</label>
-                <input type="number" id="update_birth_year" name="birth_year" ><br>
         
                 <label for="update_enclosure_id">Enclosure ID:</label>
                 <input type="number" id="update_enclosure_id" name="enclosure_id" ><br>
@@ -66,7 +61,7 @@
 
     <div class="records-section">
         <h2>Records</h2>
-        {% if records != 2 %}
+        {% if records != [] %}
             {% for first_key in records.keys() %}
                 <h1>{{ first_key }}</h1>
                 <table border="1">

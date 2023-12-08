@@ -121,13 +121,11 @@ def update_animal_info():
 
     # Requests values from HTML FILE
     animal_id = request.form.get('animal_ID')
-    species_id = request.form.get('species_ID')
     status = request.form.get('status')
-    birth_year = request.form.get('birth_year')
     enclosure_id = request.form.get('enclosure_id')
 
     # Sends to controller 0 = success, 1 = user not logged in (SHOULDN't HAVE ACCESS) and 2 = nothing was updated, wrong ID, or already exists
-    result = user.update_animal(animal_id,species_id,status,birth_year,enclosure_id)
+    result = user.update_animal(animal_id,status,enclosure_id)
 
     print(result)
     
@@ -333,19 +331,18 @@ def update_building_info():
 def attraction_management():
     
     # retirevs info from db 0 = data is available and sent to html page 1 = not data in dd 
-    result = user.get_info(["AnimalShow","species"])
+    result = user.get_info(["AnimalShow","species","RevenueType"])
 
     # db is connected and retireved empty db or had db info Handles with displaying of no data in html file
-    if result != 1 and  result != 2:
+    if int(result[0]) == 0:
         
-        return render_template('AttractionManagement.html',records = result)
+        return render_template('AttractionManagement.html',records = result[1])
     
     # Error with account = 1 or never logged in = 3
     else:
         
-        return redirect(url_for('login_page', error=result))
-
-
+        return redirect(url_for('login_page', error=result[0]))
+    
 # Inserts new Animal
 # Ask all fields below. ID is incremented
 # ALL INPUTS MUST BE PUT INTO THE FIELD
@@ -353,13 +350,16 @@ def attraction_management():
 def insert_new_attraction():
 
     # Requests values from HTML FILE
-    species_id = request.form.get('species_ID')
-    status = request.form.get('status')
-    birth_year = request.form.get('birth_year')
-    enclosure_id = request.form.get('enclosure_id')
+    name_attraction = request.form.get('name_attraction')
+    s_price = request.form.get('s_price')
+    a_price = request.form.get('a_price')
+    c_price = request.form.get('c_price')
+    num_show = request.form.get('num_show')
+    num_req = request.form.get('num_req')
+    species_id = request.form.get('species_id')
 
     # Sends to controller 0 = success, 1 = Error with  2 = never singed in
-    result = user.insert_animal(species_id, status, birth_year,enclosure_id)
+    result = user.insert_attraction(name_attraction, s_price, a_price,c_price,num_show,num_req,species_id)
 
     # Success
     if result == 0:
@@ -374,25 +374,25 @@ def insert_new_attraction():
     # Error with inputs
     else:
             
-        return redirect(url_for('Employee_management',error=result))
+        return redirect(url_for('attraction_management',error=result))
     
 
 
 # Updates Animal info 
 # CHANGING OF DB ARE ANIMAL SPEICES,STATUS,BIRTH YEAR, AND ENCLOSURE ID
 # VALUES CAN BE LEFT EMPTY AND WILL ONLY UPDATES FIELDS INPUTED BESIDES ID
-@app.route('/UpdateAnimal', methods=['POST'])
+@app.route('/UpdateAttraction', methods=['POST'])
 def update_attraction_info():
 
     # Requests values from HTML FILE
-    animal_id = request.form.get('animal_ID')
-    species_id = request.form.get('species_ID')
-    status = request.form.get('status')
-    birth_year = request.form.get('birth_year')
-    enclosure_id = request.form.get('enclosure_id')
+    id_attraction = request.form.get('id_attraction')
+    s_price = request.form.get('s_price')
+    a_price = request.form.get('a_price')
+    c_price = request.form.get('c_price')
+    num_show = request.form.get('num_show')
 
      # Sends to controller 0 = success, 1 = Error with  2 = never singed in
-    result = user.update_animal(animal_id,species_id,status,birth_year,enclosure_id)
+    result = user.update_attraction(id_attraction,s_price,a_price,c_price,num_show)
     
     # Success
     if result == 0:
@@ -407,7 +407,7 @@ def update_attraction_info():
     # Error with inputs
     else:
             
-            return redirect(url_for('animal_management',error=result))
+            return redirect(url_for('attraction_management',error=result))
     
 
 

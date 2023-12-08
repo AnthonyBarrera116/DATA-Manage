@@ -9,9 +9,9 @@ def building_insert_schema(building_name, building_type):
 
 
 # reurn enclousure insert sql and data
-def enclosure_insert_schema(enclosure_id, sq_ft):
+def enclosure_insert_schema( sq_ft):
 
-    enclosure_data = [sq_ft,enclosure_id]
+    enclosure_data = [sq_ft,]
 
     enclosure_sql = """INSERT IGNORE INTO Enclosure (SquareFoot, BuildingID)VALUES (%s, %s);"""
 
@@ -44,18 +44,3 @@ def building_update_schema(building_id, building_name, building_type):
 
     return building_sql, building_data
 
-def building_info_by_name(building_name):
-
-    building_data = [building_name,]
-
-    building_sql = "SELECT * FROM Building WHERE Name = %s;"
-    
-    return building_sql, building_data
-
-def building_info_by_ID(building_id):
-
-    building_data = [building_id,]
-
-    building_sql = "SELECT * FROM Building WHERE ID = %s;"
-    
-    return building_sql, building_data
