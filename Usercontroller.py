@@ -8,6 +8,7 @@ import AnimalSchema as a_schema
 import BuildingSchema as b_schema
 import EmployeeSchema as e_schema
 import AttractionSchema as attr_schema
+import RevenueSchema as rev_schema
 
 #_______________________________Logging in ___________________________________________________________
 
@@ -44,8 +45,6 @@ def if_user_logged_in ():
         # 2 mean they never logged in
         return 2
 
-    
-
 # get info fof tables requests for retriveing data fro viewing
 def get_info(tables):
 
@@ -53,6 +52,22 @@ def get_info(tables):
 
         # Get tables data
         tables_data = dao.get_db_info(session['username'], session['password'],tables)
+
+        # return db info, if the db is empty the value is 3, if it is 1 connection to db wasn't established
+        return tables_data
+
+    else:
+
+        # 2 mean they never logged in
+        return 2, None
+
+# get info fof tables requests for retriveing data fro viewing
+def get_info_revenue():
+
+    if 'username' in session and 'password' in session:
+
+        # Get tables data
+        tables_data = dao.get_revenue_info(session['username'], session['password'])
 
         # return db info, if the db is empty the value is 3, if it is 1 connection to db wasn't established
         return tables_data
@@ -381,4 +396,32 @@ def update_attraction(attraction_id, s_price,a_price,c_price,num_show):
    # return 2 = not logged in 
     return logged_check
     
-#___________________________________________Attrcation______________________________________________________________
+#___________________________________________Revenue______________________________________________________________
+
+# inserts new revenuetype 
+def insert_rev(revenue, number_sold, datetime_sold,reveune_id):
+
+    # returns 0 = user is logged in 2 = never logged in
+    logged_check = if_user_logged_in()
+
+    # checks if user is logged in
+    if logged_check == 0:
+
+        schema_sql = []
+
+        schema_data = []
+
+        # fetches schmema of revenuetype insert with building ID and how big
+        revenue_schema = rev_schema.revunetype_insert_schema(revenue, number_sold, datetime_sold,reveune_id)
+
+        schema_sql.append(revenue_schema[0])
+
+        schema_data.append(revenue_schema[1])
+
+        result_attraction_insert = dao.add_update(session['username'],session['password'],schema_sql,schema_data,"insert Revenue")
+
+        # returns 0 = success 1 = db connectin error 4 = duplicate 7 = constraint from result_revenuetype_insert
+        return result_attraction_insert
+
+    # returns 2 = never logged in
+    return logged_check

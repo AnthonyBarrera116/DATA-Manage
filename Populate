@@ -97,13 +97,10 @@ VALUES
 
 
 -- Populate RevenueType table
-INSERT INTO RevenueType (ID, Name, Type)
-VALUES
-(1, 'Admission', 'Admission'),
-(2, 'Concession 1', 'Concession'),
-(3, 'Kangaroo show', 'Entertainment'),
-(4, 'Concession 2', 'Concession'),
-(5, 'Kao show', 'Entertainment');
+INSERT INTO RevenueType (ID, Type) VALUES
+(1, 'Admission'),
+(2, 'Concession'),
+(3,'Entertainment');
 
 -- Existing code for populating CustomerService table
 INSERT INTO CustomerService (EmployeeID)
@@ -115,7 +112,7 @@ VALUES
 INSERT INTO Concession (RevenueTypeID, Product, CustomerServiceEmployeeID)
 VALUES
 (2, 'Hot Dog', 9),
-(4, 'Cotton Candy', 10);
+(2, 'Cotton Candy', 10);
 
 
 -- Existing code for populating Enclosure table
@@ -142,17 +139,16 @@ INSERT INTO Host (BuildingID, RevenueTypeID)
 VALUES
 (1, 1),
 (2, 2),
-(3, 3),
-(4, 4);
+(3, 3);
 
 -- Populate RevenueEvents table with the same RevenueTypeID but different details
-INSERT INTO RevenueEvents (RevenueTypeID, Revenue, TicketsSold, DateTime)
+INSERT INTO RevenueEvents (RevenueTypeID, Revenue, NumberSold, DateTime)
 VALUES
 (1, 150.00, 30, '2022-10-15 14:30:00'),
 (2, 200.00, 40, '2022-10-15 14:45:00'),
 (3, 120.00, 22, '2022-10-15 15:15:00'),
-(4, 180.00, 35, '2022-10-15 15:30:00'),
-(5, 180.00, 35, '2022-10-15 15:30:00');
+(2, 180.00, 35, '2022-10-15 15:30:00'),
+(3, 180.00, 35, '2022-10-15 15:30:00');
 
 -- Populate AnimalShow table (Subclass)
 INSERT INTO AnimalShow (RevenueTypeID, SeniorPrice, AdultPrice, ChildPrice, NumberPerDay, NumberRequested, SpeciesID)

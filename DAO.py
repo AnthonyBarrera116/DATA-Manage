@@ -85,6 +85,57 @@ def get_db_info(username, password, tables):
         cursor.close()
 
         return 1 , None
+    
+
+def get_revenue_info(username, password):
+    
+    try:
+
+        connection = _db_connection(username, password)
+        cursor = connection.cursor(dictionary=True)
+
+        attendance_revenue_result=[]
+
+        attendance_revenue_query = """
+            SELECT * 
+            FROM RevenueEvents 
+            WHERE RevenueTypeID = (SELECT ID FROM RevenueType WHERE Type = 'Admission');
+        """
+        cursor.execute(attendance_revenue_query)
+        attendance_revenue_result.append(cursor.fetchall())
+        
+        # Retrieve information from AnimalShow table
+        attendance_revenue_query = """
+            SELECT * 
+            FROM RevenueEvents 
+            WHERE RevenueTypeID = (SELECT ID FROM RevenueType WHERE Type = 'Concession');
+        """
+        cursor.execute(attendance_revenue_query)
+        attendance_revenue_result.append(cursor.fetchall())
+
+        attendance_revenue_query = """
+            SELECT * 
+            FROM RevenueEvents 
+            WHERE RevenueTypeID = (SELECT ID FROM RevenueType WHERE Type = 'Entertainment');
+        """
+        cursor.execute(attendance_revenue_query)
+        attendance_revenue_result.append(cursor.fetchall())
+
+        if attendance_revenue_result != [[],[],[]]:
+
+            connection.close()
+
+            return 0, attendance_revenue_result
+
+        connection.close()
+        return 3, attendance_revenue_result
+
+    except Exception as e:
+        print(f"Error: {e}")
+        connection.close()
+        cursor.close()
+        return 1, None
+
 
 
 # get info of person/ building/ employee/ attration 1 = connection error 4 = duplicate/exist 6 = doesn't exist 7 = constraint error

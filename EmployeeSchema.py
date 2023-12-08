@@ -10,17 +10,7 @@ def employee_insert_schema(first_name, last_name, minit, job_type, start_date, s
 
     return employee_sql, employee_data
 
-# sql and data fro employee by name
-def employee_info_by_name(first_name,last_name):
-
-    employee_data = [first_name,last_name]
-
-    employee_sql = "SELECT * FROM Employee WHERE FirstName = %s AND LastName = %s;"
-
-    
-    return employee_sql, employee_data
-
-# sql and data insert for new employee
+# sql and data insert for new hour
 def hourly_insert_schema(rate):
 
     hourly_data = [rate]
@@ -45,7 +35,7 @@ def insert_supervisor(employee_ID= None):
     
     return supervisor_sql, supervisor_data
 
-
+# Delete Supervisor
 def delete_supervisor(employee_id):
             
     supervisor_data = [employee_id]
@@ -56,14 +46,11 @@ def delete_supervisor(employee_id):
 
 # sql and data for updating employee
 def employee_update_schema(employee_id, job_type, street, city, state, zip_code):
-    
 
     update_sql = "UPDATE Employee SET"
 
-    
     update_employee = []
 
-    
     if job_type != "":
         update_sql += " JobType = %s,"
         update_employee.append(job_type)
@@ -96,8 +83,7 @@ def employee_update_schema(employee_id, job_type, street, city, state, zip_code)
 
     return update_sql, update_employee
 
-
-
+# Update hour rate
 def update_rate(rate, employee_id):
 
     houlry_data = [rate, employee_id,]

@@ -41,12 +41,12 @@ def login():
     # checks if user can login with account inputed
     logged_in_checker = user.logging_in(entered_username,entered_password)
     
-    # success
+    # success 0
     if logged_in_checker == 0:
 
         return redirect(url_for('Menu'))
     
-    # fail
+    # fail 1
     else:
         return redirect(url_for('login', error=logged_in_checker))
     
@@ -68,22 +68,24 @@ def animal_management():
     
     # retirevs info from db 0 = data is available and sent to html page 1 = not data in dd 
     result = user.get_info(["animal","enclosure","species"])
-
-    # db is connected and retireved empty db or had db info Handles with displaying of no data in html file
     
+    # DB has data 0
     if int(result[0]) == 0:
         
         return render_template('AnimalManagement.html',records = result[1])
     
-    # Not signed in
+    # DB is empty 3
+    elif int(result[0]) == 3:
+
+        return render_template('BuildingManagement.html',records = [])
+    
+    # Not signed in 2
     else:
         
         return redirect(url_for('login_page', error=result[0]))
 
 
 # Inserts new Animal
-# Ask all fields below. ID is incremented
-# ALL INPUTS MUST BE PUT INTO THE FIELD
 @app.route('/InsertAnimal', methods=['POST'])
 def insert_new_animal():
 
@@ -93,20 +95,20 @@ def insert_new_animal():
     birth_year = request.form.get('birth_year')
     enclosure_id = request.form.get('enclosure_id')
 
-    # Sends to controller 0 = success, 1 = Error with  2 = never singed in
+    # 0 = success to add 1 = connection fail 2 = not logged in 4 = duplicate/exist 7 = constarint failure for result_animal_insert
     result = user.insert_animal(species_id, status, birth_year,enclosure_id)
 
-    # Success
+    # Success 0
     if result == 0:
          
         return redirect(url_for('Menu'))
     
-    # Not logged in
+    # Not logged in 2
     elif result == 2:
             
         return redirect(url_for('login',error=result))
         
-    # Error with inputs
+    # Error with 1 = connection fail 4 = duplicate/exist 7 = constarint failure for result_animal_insert
     else:
             
         return redirect(url_for('animal_management',error=result))
@@ -114,8 +116,6 @@ def insert_new_animal():
 
 
 # Updates Animal info 
-# CHANGING OF DB ARE ANIMAL SPEICES,STATUS,BIRTH YEAR, AND ENCLOSURE ID
-# VALUES CAN BE LEFT EMPTY AND WILL ONLY UPDATES FIELDS INPUTED BESIDES ID
 @app.route('/UpdateAnimal', methods=['POST'])
 def update_animal_info():
 
@@ -124,22 +124,22 @@ def update_animal_info():
     status = request.form.get('status')
     enclosure_id = request.form.get('enclosure_id')
 
-    # Sends to controller 0 = success, 1 = user not logged in (SHOULDN't HAVE ACCESS) and 2 = nothing was updated, wrong ID, or already exists
+    # 0 = success 1 = connection failure 2 = not loigged in 6 = doesn't exist 7 = constraint for update_animal_result
     result = user.update_animal(animal_id,status,enclosure_id)
 
     print(result)
     
-    # Success
+    # Success 0
     if result == 0:
          
         return redirect(url_for('Menu'))
     
-    # Not logged in
+    # Not logged in 2
     elif result == 2:
             
             return redirect(url_for('login', error=result))
     
-    # Error with inputs
+    # 1 = connection failure 6 = doesn't exist 7 = constraint for update_animal_result
     else:
             
             return redirect(url_for('animal_management',error=result))
@@ -154,19 +154,21 @@ def Employee_management():
     # retirevs info from db 0 = data is available and sent to html page 1 = not data in dd 
     result = user.get_info(["employee","hourlyrate","supervises"])
 
-    # db is connected and retireved empty db or had db info Handles with displaying of no data in html file
+    # DB has data 0
     if int(result[0]) == 0:
         
         return render_template('EmployeeManagement.html',records = result[1])
     
-    # Not signed in
+    # DB is empty 3
+    elif int(result[0]) == 3:
+        return render_template('BuildingManagement.html',records = [])
+    
+    # Not signed in 2
     else:
 
         return redirect(url_for('login_page', error=result[0]))
 
 # Inserts new Employee
-# Ask all fields below. ID is incremented
-# ALL INPUTS MUST BE PUT INTO THE FIELD
 @app.route('/InsertEmployee', methods=['POST'])
 def insert_new_Employee():
 
@@ -183,28 +185,26 @@ def insert_new_Employee():
     supervisor = request.form.get('supervisor')
     rate = request.form.get('rate')
 
-    # Sends to controller 0 = success, 1 = user not logged in (SHOULDN't HAVE ACCESS) and 2 = nothing was updated, wrong ID, or already exists
+    # 0 = success to add 1 = connection fail 4 = duplicate/exist 7 = constarint failure for result_animal_insert
     result = user.insert_employee(first_name, last_name, minit,job_type,start_date,street,city,state,zip,supervisor,rate)
 
-    # Success
+    # Success 0
     if result == 0:
          
         return redirect(url_for('Menu'))
         
-    # Not logged in
+    # Not logged in 2
     elif result == 2:
             
         return redirect(url_for('login', error=result))
     
-    # Error with inputs
+    # 0 = success to add 1 = connection fail 4 = duplicate/exist 7 = constarint failure for result_animal_insert
     else:
             
         return redirect(url_for('Employee_management',error=result))
 
 
 # Updates Employee info 
-# CHANGING OF DB ARE EMPLOYEE JOB TYPE, STREET,CITY,STATE,CITY,STATE,ZIP,SUPERVISOR, AND RATE
-# VALUES CAN BE LEFT EMPTY AND WILL ONLY UPDATES FIELDS INPUTED BESIDES ID
 @app.route('/UpdateEmployee', methods=['POST'])
 def update_Employee_info():
 
@@ -219,20 +219,20 @@ def update_Employee_info():
     update_supervisor = request.form.get('update_supervisor')
     update_rate = request.form.get('update_rate')
 
-    # Sends to controller 0 = success, 1 = user not logged in (SHOULDN't HAVE ACCESS) and 2 = nothing was updated, wrong ID, or already exists
+    # 0 = success 1 = connection failure 2 = not loigged in 6 = doesn't exist 7 = constraint for update_animal_result
     result = user.update_employee(employee_id,update_job_type,update_street,update_city,update_state,update_zip,update_supervisor,update_rate)
     
-    # Success
+    # Success 0
     if result == 0:
          
         return redirect(url_for('Menu'))
     
-    # Not logged in
+    # Not logged in 2
     elif result == 2:
             
             return redirect(url_for('login', error=result))
     
-    # Error with inputs
+   # 1 = connection failure  6 = doesn't exist 7 = constraint for update_animal_result
     else:
             
             return redirect(url_for('Employee_management',error=result))
@@ -249,20 +249,22 @@ def building_management():
     # retirevs info from db 0 = data is available and sent to html page 1 = not data in dd 
     result = user.get_info(["building","enclosure"])
 
-    # db is connected and retireved empty db or had db info Handles with displaying of no data in html file
+    # DB has data 0
     if int(result[0]) == 0:
 
         return render_template('BuildingManagement.html',records = result[1])
     
-    # Not signed in
+    # DB is empty 3
+    elif int(result[0]) == 3:
+        return render_template('BuildingManagement.html',records = [])
+    
+    # Not signed in 2
     else:
         
         return redirect(url_for('login_page', error=result[0]))
 
 
 # Inserts new Building
-# Asks for Building name and Building type. ID is incremented
-# ALL INPUTS MUST BE PUT INTO THE FIELD
 @app.route('/InsertBuilding', methods=['POST'])
 def insert_new_building():
 
@@ -272,30 +274,26 @@ def insert_new_building():
     enclosure= request.form.get('enclosure')
     sq_ft = request.form.get('sq_ft')
 
-    # Sends to controller 0 = success, 1 = user not logged in (SHOULDN't HAVE ACCESS) and 2 = nothing was updated, wrong ID, or already exists
+    # 0 = success to add 1 = connection fail 2 = not logged in 4 = duplicate/exist 7 = constarint failure for result_animal_insert
     result = user.insert_building(building_name, type, enclosure, sq_ft)
 
-    # Success
+    # Success 0
     if result == 0:
          
         return redirect(url_for('Menu'))
         
-    # Not logged in
+    # Not logged in 2
     elif result == 2:
             
         return redirect(url_for('login', error=result))
     
-    # Error with inputs
+    # Error with 1 = connection fail 4 = duplicate/exist 7 = constarint failure for result_animal_insert
     else:
             
         return redirect(url_for('building_management',error=result))
     
 
-
-
 # Updates Building info 
-# CHANGING OF DB ARE BUILDING NAME AND BUILDING TYPE
-# VALUES CAN BE LEFT EMPTY AND WILL ONLY UPDATES FIELDS INPUTED BESIDES ID
 @app.route('/UpdateBuilding', methods=['POST'])
 def update_building_info():
 
@@ -304,21 +302,21 @@ def update_building_info():
     building_name= request.form.get('update_name')
     type = request.form.get('update_type')
 
-    # Sends to controller 0 = success, 1 = user not logged in (SHOULDN't HAVE ACCESS) and 2 = nothing was updated, wrong ID, or already exists
+    # 0 = success 1 = connection failure 2 = not loigged in 6 = doesn't exist 7 = constraint for update_animal_result
     result = user.update_building(building_id ,building_name, type)
     
 
-    # Success
+    # Success 0
     if result == 0:
          
         return redirect(url_for('Menu'))
         
-    # Not logged in
+    # Not logged in 2
     elif result == 2:
             
         return redirect(url_for('login', error=result))
     
-    # Error with inputs
+    # 1 = connection failure 6 = doesn't exist 7 = constraint for update_animal_result
     else:
             
         return redirect(url_for('building_management',error=result))
@@ -326,26 +324,29 @@ def update_building_info():
 
 #_______________________________Attraction Insert/Update___________________________________________________________
 
-# Routes to Animal Management Page and displays all info of animal info
+# Routes to Attraction Management Page and displays all info of animal info
 @app.route('/AttractionManagement', methods=['POST',"GET"])
 def attraction_management():
     
     # retirevs info from db 0 = data is available and sent to html page 1 = not data in dd 
     result = user.get_info(["AnimalShow","species","RevenueType"])
 
-    # db is connected and retireved empty db or had db info Handles with displaying of no data in html file
+    # DB has data 0
     if int(result[0]) == 0:
         
         return render_template('AttractionManagement.html',records = result[1])
     
-    # Error with account = 1 or never logged in = 3
+    # DB is empty 3
+    elif int(result[0]) == 3:
+        return render_template('AttractionManagement.html',records = [])
+    
+    # Not signed in 2
     else:
         
         return redirect(url_for('login_page', error=result[0]))
     
-# Inserts new Animal
-# Ask all fields below. ID is incremented
-# ALL INPUTS MUST BE PUT INTO THE FIELD
+
+# Inserts New Attraction
 @app.route('/InsertAttraction', methods=['POST'])
 def insert_new_attraction():
 
@@ -358,29 +359,25 @@ def insert_new_attraction():
     num_req = request.form.get('num_req')
     species_id = request.form.get('species_id')
 
-    # Sends to controller 0 = success, 1 = Error with  2 = never singed in
+    # 0 = success to add 1 = connection fail 2 = not logged in 4 = duplicate/exist 7 = constarint failure for result_animal_insert
     result = user.insert_attraction(name_attraction, s_price, a_price,c_price,num_show,num_req,species_id)
 
-    # Success
+    #  Success 0
     if result == 0:
          
         return redirect(url_for('Menu'))
     
-    # Not logged in
+    # Not logged in 2
     elif result == 2:
             
         return redirect(url_for('login',error=result))
         
-    # Error with inputs
+    # Error with 1 = connection fail 4 = duplicate/exist 7 = constarint failure for result_animal_insert
     else:
             
         return redirect(url_for('attraction_management',error=result))
     
-
-
-# Updates Animal info 
-# CHANGING OF DB ARE ANIMAL SPEICES,STATUS,BIRTH YEAR, AND ENCLOSURE ID
-# VALUES CAN BE LEFT EMPTY AND WILL ONLY UPDATES FIELDS INPUTED BESIDES ID
+# update Attraction
 @app.route('/UpdateAttraction', methods=['POST'])
 def update_attraction_info():
 
@@ -391,23 +388,76 @@ def update_attraction_info():
     c_price = request.form.get('c_price')
     num_show = request.form.get('num_show')
 
-     # Sends to controller 0 = success, 1 = Error with  2 = never singed in
+    # 0 = success 1 = connection failure 2 = not loigged in 6 = doesn't exist 7 = constraint for update_animal_result
     result = user.update_attraction(id_attraction,s_price,a_price,c_price,num_show)
     
-    # Success
+    # Success 0
     if result == 0:
          
         return redirect(url_for('Menu'))
     
-    # Not logged in
+    # Not logged in 2
     elif result == 2:
             
             return redirect(url_for('login', error=result))
     
-    # Error with inputs
+    # 1 = connection failure 6 = doesn't exist 7 = constraint for update_animal_result
     else:
             
             return redirect(url_for('attraction_management',error=result))
+    
+
+#_______________________________Attractions Daily zoo___________________________________________________________
+
+# Routes to Revenue and displays all info 
+@app.route('/ViewRev', methods=['POST',"GET"])
+def view():
+    
+    # retirevs info from db 0 = data is available and sent to html page 1 = not data in dd 
+    result = user.get_info_revenue()
+
+    # DB has data 0
+    if int(result[0]) == 0:
+        
+        return render_template('Revenue.html',records = result[1])
+    
+    # DB is empty 3
+    elif int(result[0]) == 3:
+
+        return render_template('Revenue.html',records = [])
+    
+    # Not signed in 2
+    else:
+        
+        return redirect(url_for('login_page', error=result[0]))
+
+# insert Revenue
+@app.route('/InsertRevenue', methods=['POST'])
+def insert_new_rev():
+
+    # Requests values from HTML FILE
+    revenue = request.form.get('revenue')
+    number_sold = request.form.get('number_sold')
+    datetime_sold = request.form.get('datetime_sold')
+    reveune_id = request.form.get('reveune_id')
+
+    # 0 = success to add 1 = connection fail 4 = duplicate/exist 7 = constarint failure for result_animal_insert
+    result = user.insert_rev(revenue, number_sold, datetime_sold,reveune_id)
+
+    # Success 0*
+    if result == 0:
+         
+        return redirect(url_for('Menu'))
+    
+    # Not logged in 2
+    elif result == 2:
+            
+        return redirect(url_for('login',error=result))
+        
+    # 0 = success to add 1 = connection fail 4 = duplicate/exist 7 = constarint failure for result_animal_insert
+    else:
+            
+        return redirect(url_for('attraction_management',error=result))
     
 
 

@@ -70,7 +70,7 @@
 
     <div class="records-section">
         <h2>Records</h2>
-        {% if records != 2 %}
+        {% if records != [] %}
             {% for first_key in records.keys() %}
                 <h1>{{ first_key }}</h1>
                 <table border="1">

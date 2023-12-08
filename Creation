@@ -73,18 +73,17 @@ CREATE TABLE Building (
 -- Define the RevenueType table
 
 CREATE TABLE RevenueType (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
-    Name VARCHAR(255),
+    ID INT PRIMARY KEY,
     Type VARCHAR(255)
 );
 
 -- Define the RevenueEvents table
 CREATE TABLE RevenueEvents (
-    RevenueTypeID INT AUTO_INCREMENT,
+    EventID INT PRIMARY KEY AUTO_INCREMENT,
     Revenue DECIMAL(10, 2),
-    TicketsSold INT,
+    NumberSold INT,
     DateTime DATETIME,
-    PRIMARY KEY (RevenueTypeID), 
+    RevenueTypeID INT,
     FOREIGN KEY (RevenueTypeID) REFERENCES RevenueType(ID)
 );
 
