@@ -40,6 +40,6 @@ def animal_info(animal_id):
 
     animal_data = [animal_id,]
 
-    animal_sql = "SELECT * FROM Animal WHERE ID = %s;"\
+    animal_sql = "SELECT * FROM Animal WHERE ID = %s;"
     
     return animal_sql, animal_data
