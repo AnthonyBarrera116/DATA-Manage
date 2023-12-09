@@ -80,6 +80,7 @@ CREATE TABLE RevenueType (
 -- Define the RevenueEvents table
 CREATE TABLE RevenueEvents (
     EventID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(255),
     Revenue DECIMAL(10, 2),
     NumberSold INT,
     StartDate DATE,
@@ -158,7 +159,6 @@ CREATE TABLE ZooAdmission (
 
 -- Define the AnimalShow table (Including Relationship with Species and Subclass to RevenueType)
 CREATE TABLE AnimalShow (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
     SeniorPrice DECIMAL(10, 2),
     AdultPrice DECIMAL(10, 2),
     ChildPrice DECIMAL(10, 2),
