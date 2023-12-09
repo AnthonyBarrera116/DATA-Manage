@@ -82,7 +82,7 @@ CREATE TABLE RevenueEvents (
     EventID INT PRIMARY KEY AUTO_INCREMENT,
     Revenue DECIMAL(10, 2),
     NumberSold INT,
-    DateTime DATETIME,
+    StartDate DATE,
     RevenueTypeID INT,
     FOREIGN KEY (RevenueTypeID) REFERENCES RevenueType(ID)
 );

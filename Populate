@@ -142,13 +142,13 @@ VALUES
 (3, 3);
 
 -- Populate RevenueEvents table with the same RevenueTypeID but different details
-INSERT INTO RevenueEvents (RevenueTypeID, Revenue, NumberSold, DateTime)
+INSERT INTO RevenueEvents (RevenueTypeID, Revenue, NumberSold, StartDate)
 VALUES
-(1, 150.00, 30, '2022-10-15 14:30:00'),
-(2, 200.00, 40, '2022-10-15 14:45:00'),
-(3, 120.00, 22, '2022-10-15 15:15:00'),
-(2, 180.00, 35, '2022-10-15 15:30:00'),
-(3, 180.00, 35, '2022-10-15 15:30:00');
+(1, 150.00, 30, '2022-10-15'),
+(2, 200.00, 40, '2022-10-15'),
+(3, 120.00, 22, '2022-10-15'),
+(2, 180.00, 35, '2022-10-15'),
+(3, 180.00, 35, '2022-10-15');
 
 -- Populate AnimalShow table (Subclass)
 INSERT INTO AnimalShow (RevenueTypeID, SeniorPrice, AdultPrice, ChildPrice, NumberPerDay, NumberRequested, SpeciesID)
