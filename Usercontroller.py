@@ -318,7 +318,6 @@ def update_employee(employee_id,job_type=None, street=None, city=None, state=Non
 
         employee_result = dao.add_update(session['username'], session['password'], schema_sql, schema_data,"employee update")
 
-        print(employee_result)
 
         return employee_result
 

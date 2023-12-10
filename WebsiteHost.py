@@ -133,8 +133,6 @@ def update_animal_info():
 
     # 0 = success 1 = connection failure 2 = not loigged in 6 = doesn't exist 7 = constraint for update_animal_result
     result = user.update_animal(animal_id,status,enclosure_id)
-
-    print(result)
     
     # Success 0
     if result == 0:
@@ -605,8 +603,6 @@ def avg_report():
    end_date = request.form.get('end_date')
 
    report = user.average_report(start_date,end_date)
-
-   print(report)
 
    if report == 2:
        

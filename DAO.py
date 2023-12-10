@@ -186,10 +186,6 @@ def add_update(username, password, sql_list, data_list,operation):
 
         for number, (sql, data) in enumerate(zip(sql_list, data_list), start=0):
 
-            print(sql)
-
-            print(data)
-
             if (operation == "insert building/enclosure" and number != 0):
                 
                 data += (id, )
@@ -201,9 +197,6 @@ def add_update(username, password, sql_list, data_list,operation):
                 
                 data += (id, )
                 
-                print(sql)
-
-                print(data)
 
                 cursor.execute(sql,tuple(data))
 
