@@ -57,8 +57,15 @@ def login():
 @app.route('/Menu')
 def Menu():
    
-   return render_template('Menu.html')#,records = results)
-    
+   logged = user.if_user_logged_in()
+
+   if logged == 0:
+        
+        return render_template('Menu.html')#,records = results)
+   
+   else:
+       
+        return redirect(url_for('login_page', error=logged))
 
 #_______________________________Animal Insert/Update___________________________________________________________
 
@@ -101,7 +108,7 @@ def insert_new_animal():
     # Success 0
     if result == 0:
          
-        return redirect(url_for('Menu'))
+        return redirect(url_for('animal_management'))
     
     # Not logged in 2
     elif result == 2:
@@ -132,7 +139,7 @@ def update_animal_info():
     # Success 0
     if result == 0:
          
-        return redirect(url_for('Menu'))
+        return redirect(url_for('animal_management'))
     
     # Not logged in 2
     elif result == 2:
@@ -191,7 +198,7 @@ def insert_new_Employee():
     # Success 0
     if result == 0:
          
-        return redirect(url_for('Menu'))
+        return redirect(url_for('Employee_management'))
         
     # Not logged in 2
     elif result == 2:
@@ -225,7 +232,7 @@ def update_Employee_info():
     # Success 0
     if result == 0:
          
-        return redirect(url_for('Menu'))
+        return redirect(url_for('Employee_management'))
     
     # Not logged in 2
     elif result == 2:
@@ -280,7 +287,7 @@ def insert_new_building():
     # Success 0
     if result == 0:
          
-        return redirect(url_for('Menu'))
+        return redirect(url_for('building_management'))
         
     # Not logged in 2
     elif result == 2:
@@ -309,7 +316,7 @@ def update_building_info():
     # Success 0
     if result == 0:
          
-        return redirect(url_for('Menu'))
+        return redirect(url_for('building_management'))
         
     # Not logged in 2
     elif result == 2:
@@ -365,7 +372,7 @@ def insert_new_attraction():
     #  Success 0
     if result == 0:
          
-        return redirect(url_for('Menu'))
+        return redirect(url_for('attraction_management'))
     
     # Not logged in 2
     elif result == 2:
@@ -394,7 +401,7 @@ def update_attraction_info():
     # Success 0
     if result == 0:
          
-        return redirect(url_for('Menu'))
+        return redirect(url_for('attraction_management'))
     
     # Not logged in 2
     elif result == 2:
@@ -436,18 +443,19 @@ def view():
 def insert_new_rev():
 
     # Requests values from HTML FILE
+    name = request.form.get('Name')
     revenue = request.form.get('revenue')
     number_sold = request.form.get('number_sold')
     datetime_sold = request.form.get('datetime_sold')
     reveune_id = request.form.get('reveune_id')
 
     # 0 = success to add 1 = connection fail 4 = duplicate/exist 7 = constarint failure for result_animal_insert
-    result = user.insert_rev(revenue, number_sold, datetime_sold,reveune_id)
+    result = user.insert_rev(name, revenue, number_sold, datetime_sold,reveune_id)
 
     # Success 0*
     if result == 0:
          
-        return redirect(url_for('Menu'))
+        return redirect(url_for('view'))
     
     # Not logged in 2
     elif result == 2:
@@ -457,8 +465,157 @@ def insert_new_rev():
     # 0 = success to add 1 = connection fail 4 = duplicate/exist 7 = constarint failure for result_animal_insert
     else:
             
-        return redirect(url_for('attraction_management',error=result))
+        return redirect(url_for('view',error=result))
+  
+#__________________________________________report________________________________________________________________
+
+@app.route('/ManageReportGivenDay', methods=['POST',"GET"])
+def report_view_given():
+  
+   logged = user.if_user_logged_in()
+
+   if logged == 0:
+        
+        return render_template('ManageReportGivenDay.html', records = [])
+   
+   else:
+       
+        return redirect(url_for('login_page', error=logged))
+   
+@app.route('/RevReportByDay', methods=['POST',"GET"])
+def report_given():
+  
+   date = request.form.get('date')
+
+   report = user.report_rev(date)
+      
+   if report == 2:
+       
+        return redirect(url_for('login_page', error=report))
+   
+   else:
+        
+        return render_template('ManageReportGivenDay.html', records = report[1])
+   
+   
+
+#__________________________________________report________________________________________________________________
+@app.route('/ManageReportProduce', methods=['POST',"GET"])
+def report_view_produce():
+  
+   logged = user.if_user_logged_in()
+
+   results = user.produce_report()
+
+   if logged == 0:
+        
+        return render_template('ManageReportProduce.html', records = results)
+   
+   else:
+       
+        return redirect(url_for('login_page', error=logged))
+   
+
+
+
+#__________________________________________report________________________________________________________________
+@app.route('/ManageReportTimePeriodTop', methods=['POST',"GET"])
+def report_view_given_time_top():
+  
+   logged = user.if_user_logged_in()
+
+   if logged == 0:
+        
+        return render_template('ManageReportTimePeriodTop.html', records = [])
+   
+   else:
+       
+        return redirect(url_for('login_page', error=logged))
+   
+@app.route('/TopThree', methods=['POST',"GET"])
+def report_top_three():
+  
+   start_date = request.form.get('start_date')
+   end_date = request.form.get('end_date')
+
+   report = user.top_report(start_date,end_date)
+   
+   if report == 2:
+       
+        return redirect(url_for('login_page', error=report))
+   
+   else:
+        
+        return render_template('ManageReportTimePeriodTop.html', records = report[1])
+   
+   
+
+
+#__________________________________________report________________________________________________________________
+@app.route('/ManageReportMonth', methods=['POST',"GET"])
+def report_best_view():
+  
+   logged = user.if_user_logged_in()
+
+   if logged == 0:
+        
+        return render_template('ManageReportMonth.html', records = [])
+   
+   else:
+       
+        return redirect(url_for('login_page', error=logged))
+   
+@app.route('/BestDays', methods=['POST',"GET"])
+def best_days_report():
+  
+   month = request.form.get('month')
+
+   year = request.form.get('year')
+
+   report = user.best_report(month,year)
+
+   if report == 2:
+       
+        return redirect(url_for('login_page', error=report))
+   
+   else:
+        
+        return render_template('ManageReportMonth.html', records = report[1])
+
+#__________________________________________report________________________________________________________________
+@app.route('/ManageReportTimePeriodAvg', methods=['POST',"GET"])
+def report_view_avg():
+  
+   logged = user.if_user_logged_in()
+
+   if logged == 0:
+        
+        return render_template('ManageReportTimePeriodAvg.html', records = [])
+   
+   else:
+       
+        return redirect(url_for('login_page', error=logged))
     
+
+@app.route('/AvgRev', methods=['POST',"GET"])
+def avg_report():
+  
+   start_date = request.form.get('start_date')
+
+   end_date = request.form.get('end_date')
+
+   report = user.average_report(start_date,end_date)
+
+   print(report)
+
+   if report == 2:
+       
+        return redirect(url_for('login_page', error=report))
+   
+   else:
+        
+        return render_template('ManageReportTimePeriodAvg.html', records = report)
+
 
 
 #__________________________________________Main________________________________________________________________

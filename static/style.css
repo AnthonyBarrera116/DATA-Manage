@@ -12,7 +12,7 @@ body {
     background-color: rgba(51, 51, 51, 0.9); /* Darken the background color */
     color: #fff;
     text-align: center;
-    padding:0px;
+    padding: 0px;
     z-index: 1;
     font-size: 60px;
 }
@@ -85,7 +85,7 @@ a {
 
 .form-container {
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start; /* Updated to align the form to the left */
     background-color: rgba(255, 255, 255, 0.8); /* Adjust the opacity as needed */
     padding: 20px;
     border-radius: 10px;
@@ -110,7 +110,6 @@ a {
     overflow: auto; /* Enable scrolling within the box if needed */
 }
 
-
 table {
     width: 100%;
     margin-top: 10px;
@@ -124,15 +123,6 @@ table, th, td {
 th, td {
     padding: 8px; /* Adjust the padding as needed */
     text-align: left;
-}
-
-.no-data {
-    text-align: center;
-    color: #333;
-}
-
-a {
-    color: #333;
 }
 
 .sign-in-button {
@@ -149,14 +139,13 @@ a {
 }
 
 .login-container {
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
 }
-
 
 .login-container h2 {
     margin-bottom: 20px;

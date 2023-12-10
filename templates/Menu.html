@@ -41,42 +41,26 @@
             </div>
             <div class="category-box" onclick="showManagementReportingMenu()">
                 <h2>Management and Reporting</h2>
-                <!-- Add buttons or forms related to Management and Reporting here -->
+                <form action="/ManageReportGivenDay" method="post">
+                    <button type="submit">Report</button>
+                </form>
+                <form action="/ManageReportProduce" method="post">
+                    <button type="submit">Report</button>
+                </form>
+                <form action="/ManageReportTimePeriodTop" method="post">
+                    <button type="submit">Report</button>
+                </form>
+                <form action="/ManageReportMonth" method="post">
+                    <button type="submit">Report</button>
+                </form>
+                <form action="/ManageReportTimePeriodAvg" method="post">
+                    <button type="submit">Report</button>
+                </form>
+
             </div>
         </div>
     </div>
 
-    <div id="asset-management-menu" style="display: none;">
-        <!-- Content for Asset Management Menu -->
-    </div>
 
-    <!-- Similar modifications for other menus -->
-
-    <script>
-        function updateInsertAnimal() {
-            alert("Update/Insert Animal Clicked");
-            // Add logic for updating/inserting animal
-        }
-
-        function updateInsertBuilding() {
-            alert("Update/Insert Building Clicked");
-            // Add logic for updating/inserting building
-        }
-
-        function updateInsertEmployee() {
-            alert("Update/Insert Employee Clicked");
-            // Add logic for updating/inserting employee
-        }
-
-        function showDailyZooActivityMenu() {
-            // Additional logic if needed
-            document.getElementById('daily-zoo-activity-menu').style.display = 'block';
-        }
-
-        function showManagementReportingMenu() {
-            // Additional logic if needed
-            document.getElementById('management-reporting-menu').style.display = 'block';
-        }
-    </script>
 </body>
 </html>

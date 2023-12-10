@@ -88,7 +88,7 @@ def get_db_info(username, password, tables):
     
 
 def get_revenue_info(username, password):
-    
+
     try:
 
         connection = _db_connection(username, password)
@@ -140,16 +140,12 @@ def get_revenue_info(username, password):
 
 # get info of person/ building/ employee/ attration 1 = connection error 4 = duplicate/exist 6 = doesn't exist 7 = constraint error
 def get_info(username, password, query, params):
-
     try:
-        
         connection = _db_connection(username, password)
-        
         if not connection.is_connected():
-
             return 1, None
 
-        cursor = connection.cursor(dictionary=True)
+        cursor = connection.cursor()
 
         cursor.execute(query, params)
 
@@ -158,24 +154,19 @@ def get_info(username, password, query, params):
         connection.close()
 
         if cursor.rowcount > 0:
-            
-            return 3, result  
-        
-        
-        connection.close()
+            return 3, result
 
         cursor.close()
 
         return 6, None
 
-
     except Error as e:
         connection.close()
-        cursor.close()
-
         print("Error while connecting to MySQL", e)
-    
         return 7, None
+
+
+
 
 # add to database 0 = success 1 = connection error 4 = duplicate 7 = constraint 
 def add_update(username, password, sql_list, data_list,operation):

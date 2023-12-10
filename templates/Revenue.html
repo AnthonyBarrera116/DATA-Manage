@@ -17,6 +17,10 @@
             <a href="/Menu">Back</a>
             <h1>Insert Revenue</h1>
             <form action="/InsertRevenue" method="post">
+                
+                <label for="Name"> Name:</label>
+                <input type="text" id="Name" name="Name" required><br>
+        
                 <label for="revenue"> Revenue:</label>
                 <input type="number" id="revenue" name="revenue" required><br>
         
@@ -24,7 +28,7 @@
                 <input type="number" id="number_sold" name="number_sold" required><br>
 
                 <label for="datetime_sold">Date and Time:</label>
-                <input type="datetime-local" id="datetime_sold" name="datetime_sold" required><br>
+                <input type="date" id="datetime_sold" name="datetime_sold" required><br>
 
                 <label for="reveune_id">Revenue ID:</label>
                 <input type="number" id="reveune_id" name="reveune_id" ><br>

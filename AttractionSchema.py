@@ -1,18 +1,9 @@
-# revune insert
-def revunetype_insert_schema (name_attraction):
-
-    revunetype_data = [name_attraction,'Entertainment',]
-
-    revunetype_sql = "INSERT INTO RevenueType (Name, Type) VALUES (%s, %s)"
-
-    return revunetype_sql, revunetype_data
-
 # Attraction Insert
-def attraction_insert_schema (s_price, a_price,c_price,num_show,num_req,species_id):
+def attraction_insert_schema (name_attraction,s_price, a_price,c_price,num_show,num_req,type,species_id):
 
-    revunetype_data = [s_price, a_price,c_price,num_show,num_req,species_id,]
+    revunetype_data = [name_attraction,s_price, a_price,c_price,num_show,num_req,type,species_id,]
 
-    revunetype_sql = "INSERT INTO animalshow (SeniorPrice, AdultPrice,ChildPrice, NumberPerDay, NumberRequested, SpeciesID,RevenueTypeID) VALUES (%s, %s,%s, %s,%s, %s,%s)"
+    revunetype_sql = "INSERT INTO animalshow (Name, SeniorPrice, AdultPrice,ChildPrice, NumberPerDay, NumberRequested, SpeciesID,RevenueTypeID) VALUES (%s, %s,%s, %s,%s, %s,%s,%s)"
 
     return revunetype_sql, revunetype_data
 

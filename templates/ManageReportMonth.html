@@ -1,0 +1,61 @@
+<!-- insert_animal.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoo Management report</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    
+</head>
+<body>
+    <div id="header">
+        <h1>Zoo Management report</h1>
+        <div class="stripe"></div>
+    </div>
+    <div class="form-container">
+        <div class="form-section">
+            <a href="/Menu">Back</a>
+            <h1>Best 5 Days Report</h1>
+            <form action="/BestDays" method="post">
+                <p>(For Month Enter 1- 12)</p>
+
+                <label for="month">Month:</label>
+                <input type="number" id="month" name="month" required><br>
+
+                <label for="year">Year:</label>
+                <input type="number" id="year" name="year" required><br>
+
+                <button type="submit">Best 5 Days Report</button>
+            </form>
+        </div>
+
+    </div>
+    <div class="records-section">
+        <h2>Records</h2>
+        {% if records != [] %}
+            <table border="1">
+                <tr>
+                    <th>Date</th>
+                    <th>Revenue</th>
+                </tr>
+
+                {% for start in records %}
+                    <tr>
+                        {% for value in start %}
+                        
+                                <th>{{ value }}</th>
+                            
+                       
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p class="no-data">No animal data in Zoo Database</p>
+        {% endif %}
+    </div>
+
+    
+</body>
+</html>

@@ -59,7 +59,7 @@ def get_info(tables):
     else:
 
         # 2 mean they never logged in
-        return 2, None
+        return 2, []
 
 # get info fof tables requests for retriveing data fro viewing
 def get_info_revenue():
@@ -75,7 +75,7 @@ def get_info_revenue():
     else:
 
         # 2 mean they never logged in
-        return 2, None
+        return 2, []
 
 
 #_______________________________Animal Insert/Update___________________________________________________________
@@ -341,13 +341,8 @@ def insert_attraction(name_attraction, s_price, a_price,c_price,num_show,num_req
         schema_data = []
 
         # fetches schmema of revenuetype insert with building ID and how big
-        revenuetype_schema = attr_schema.revunetype_insert_schema(name_attraction)
 
-        attraction_schema = attr_schema.attraction_insert_schema(s_price, a_price,c_price,num_show,num_req,species_id)
-
-        schema_sql.append(revenuetype_schema[0])
-
-        schema_data.append(revenuetype_schema[1])
+        attraction_schema = attr_schema.attraction_insert_schema(name_attraction,s_price, a_price,c_price,num_show,num_req,3,species_id)
 
         schema_sql.append(attraction_schema[0])
 
@@ -399,7 +394,7 @@ def update_attraction(attraction_id, s_price,a_price,c_price,num_show):
 #___________________________________________Revenue______________________________________________________________
 
 # inserts new revenuetype 
-def insert_rev(revenue, number_sold, datetime_sold,reveune_id):
+def insert_rev(name, revenue, number_sold, datetime_sold,reveune_id):
 
     # returns 0 = user is logged in 2 = never logged in
     logged_check = if_user_logged_in()
@@ -412,13 +407,139 @@ def insert_rev(revenue, number_sold, datetime_sold,reveune_id):
         schema_data = []
 
         # fetches schmema of revenuetype insert with building ID and how big
-        revenue_schema = rev_schema.revunetype_insert_schema(revenue, number_sold, datetime_sold,reveune_id)
+        revenue_schema = rev_schema.revunetype_insert_schema(name,revenue, number_sold, datetime_sold,reveune_id)
 
         schema_sql.append(revenue_schema[0])
 
         schema_data.append(revenue_schema[1])
 
         result_attraction_insert = dao.add_update(session['username'],session['password'],schema_sql,schema_data,"insert Revenue")
+
+        # returns 0 = success 1 = db connectin error 4 = duplicate 7 = constraint from result_revenuetype_insert
+        return result_attraction_insert
+
+    # returns 2 = never logged in
+    return logged_check
+
+
+#___________________________________________Report______________________________________________________________
+
+def report_rev(date):
+    # returns 0 = user is logged in 2 = never logged in
+    logged_check = if_user_logged_in()
+
+    # checks if user is logged in
+    if logged_check == 0:
+
+        revenue_schema = rev_schema.revenue_report(date)
+
+        schema_sql = revenue_schema[0]
+        schema_data = revenue_schema[1]
+
+        result_attraction_insert = dao.get_info(session['username'], session['password'], schema_sql, schema_data)
+
+        # returns 0 = success 1 = db connectin error 4 = duplicate 7 = constraint from result_revenuetype_insert
+        return result_attraction_insert
+
+    # returns 2 = never logged in
+    return logged_check
+
+#___________________________________________Report______________________________________________________________
+
+def produce_report():
+
+    # returns 0 = user is logged in 2 = never logged in
+    logged_check = if_user_logged_in()
+
+    # checks if user is logged in
+    if logged_check == 0:
+
+        revenue_schema = rev_schema.produce_rep()
+
+        schema_sql = revenue_schema[0]
+        schema_data = revenue_schema[1]
+
+        result_attraction_insert = []
+
+        for schmema in schema_sql:
+
+            result_attraction_insert.append(dao.get_info(session['username'], session['password'], schmema, schema_data))
+
+        # returns 0 = success 1 = db connectin error 4 = duplicate 7 = constraint from result_revenuetype_insert
+        return result_attraction_insert
+
+    # returns 2 = never logged in
+    return logged_check
+
+#___________________________________________Report______________________________________________________________
+
+def top_report(start_date,end_date):
+
+    # returns 0 = user is logged in 2 = never logged in
+    logged_check = if_user_logged_in()
+
+    # checks if user is logged in
+    if logged_check == 0:
+
+        revenue_schema = rev_schema.top_rep(start_date,end_date)
+
+        schema_sql = revenue_schema[0]
+        schema_data = revenue_schema[1]
+
+        result_attraction_insert = dao.get_info(session['username'], session['password'], schema_sql, schema_data)
+
+
+        # returns 0 = success 1 = db connectin error 4 = duplicate 7 = constraint from result_revenuetype_insert
+        return result_attraction_insert
+
+    # returns 2 = never logged in
+    return logged_check
+
+#___________________________________________Report______________________________________________________________
+
+def best_report(month,year):
+
+    # returns 0 = user is logged in 2 = never logged in
+    logged_check = if_user_logged_in()
+
+    # checks if user is logged in
+    if logged_check == 0:
+
+        revenue_schema = rev_schema.best_rep(month,year)
+
+        schema_sql = revenue_schema[0]
+        schema_data = revenue_schema[1]
+
+        result_attraction_insert = dao.get_info(session['username'], session['password'], schema_sql, schema_data)
+
+
+        # returns 0 = success 1 = db connectin error 4 = duplicate 7 = constraint from result_revenuetype_insert
+        return result_attraction_insert
+
+    # returns 2 = never logged in
+    return logged_check
+
+
+#___________________________________________Report______________________________________________________________
+
+def average_report(start_date,end_date):
+
+    # returns 0 = user is logged in 2 = never logged in
+    logged_check = if_user_logged_in()
+
+    # checks if user is logged in
+    if logged_check == 0:
+
+        revenue_schema = rev_schema.avg_rep(start_date,end_date)
+
+        schema_sql = revenue_schema[0]
+        schema_data = revenue_schema[1]
+
+        result_attraction_insert = []
+
+        for schmema in schema_sql:
+
+            result_attraction_insert.append(dao.get_info(session['username'], session['password'], schmema, schema_data))
 
         # returns 0 = success 1 = db connectin error 4 = duplicate 7 = constraint from result_revenuetype_insert
         return result_attraction_insert
