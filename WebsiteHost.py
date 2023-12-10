@@ -18,7 +18,7 @@ app.secret_key = secrets.token_hex(16)
 def home():
     
     # returns mainpage
-    return render_template('MainPage.html', message='')
+    return render_template('MainPage.html',)
 
 
 #_______________________________Login/login Page___________________________________________________________
@@ -27,7 +27,15 @@ def home():
 # Login Page
 @app.route('/login')
 def login_page():
-    return render_template('login.html', message='')
+    return render_template('login.html')
+
+# Login Page
+@app.route('/logout',methods=['POST'])
+def logout():
+
+    user.logout()
+
+    return redirect(url_for('home'))
 
 
 # Login checking field

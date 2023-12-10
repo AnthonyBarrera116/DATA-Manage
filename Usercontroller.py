@@ -30,6 +30,15 @@ def logging_in(username,password):
     return logging_sucess_result
 
 
+#_______________________________Logging out ___________________________________________________________
+
+# Checks if user account is in DB and saves session
+def logout():
+
+    session['username'] = ""
+    session['password'] = ""
+
+
 #_______________________________User Checking___________________________________________________________
 
 # if user is logged in and saved in session
