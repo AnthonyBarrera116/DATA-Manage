@@ -73,14 +73,14 @@ def avg_rep(start_date,end_date):
 
     revenue_sql = []
 
-    revenue_sql.append("""SELECT EventID, Name AS EventName, AVG(Revenue) AS AverageRevenue
+    revenue_sql.append("""SELECT EventID, Name AS EventName, FORMAT(AVG(Revenue),2) AS AverageRevenue
             FROM RevenueEvents
             WHERE StartDate BETWEEN %s AND %s 
             GROUP BY EventID, Name;
 
                     """)
 
-    revenue_sql.append("""SELECT NULL AS EventID, 'Total Attendance' AS EventName, AVG(NumberSold) AS AverageAttendance
+    revenue_sql.append("""SELECT NULL AS EventID, 'Total Attendance' AS EventName, FORMAT(AVG(NumberSold),0) AS AverageAttendance
             FROM RevenueEvents
             WHERE StartDate BETWEEN %s AND %s;
 
