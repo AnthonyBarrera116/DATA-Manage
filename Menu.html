@@ -1,0 +1,74 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoo Management System</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+
+<body>
+    
+    <div id="header">
+        <h1>Zoo Management System</h1>
+        <div class="stripe"></div>
+    </div>
+
+    <div id="logout-box">
+        <form action="/logout" method="post">
+            <button type="submit">Log Out</button>
+        </form>
+    </div>
+    
+    <div id="main-menu">
+        <div class="category-container">
+            
+            <div class="category-box asset-management">
+                <h2>Asset Management</h2>
+                <form action="/AnimalManagement" method="post">
+                    <button type="submit">Update/Insert Animal</button>
+                </form>
+                <form action="/BuildingManagement" method="post" >
+                    <button type="submit">Update/Insert Building</button>
+                </form>
+                <form action="/EmployeeManagement" method="post" >
+                    <button type="submit">Update/Insert Employee</button>
+                </form>
+                <form action="/AttractionManagement" method="post" >
+                    <button type="submit">Update/Insert Attraction</button>
+                </form>
+            </div>
+
+            <div class="category-box Daily Zoo">
+                <h2>Daily Zoo</h2>
+                <form action="/ViewRev" method="post">
+                    <button type="submit">View Revenue and Numbers</button>
+                </form>
+            </div>
+
+            <div class="category-box">
+                <h2>Management and Reporting</h2>
+                <form action="/ManageReportGivenDay" method="post">
+                    <button type="submit">Revenue Report Given Day</button>
+                </form>
+                <form action="/ManageReportProduce" method="post">
+                    <button type="submit">Produce Report</button>
+                </form>
+                <form action="/ManageReportTimePeriodTop" method="post">
+                    <button type="submit">Top Three attractions Report</button>
+                </form>
+                <form action="/ManageReportMonth" method="post">
+                    <button type="submit">Best Days Report</button>
+                </form>
+                <form action="/ManageReportTimePeriodAvg" method="post">
+                    <button type="submit">Average Report</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+</html>

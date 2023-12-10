@@ -482,7 +482,7 @@ def report_view_given():
 
    if logged == 0:
         
-        return render_template('ManageReportGivenDay.html', records = [])
+        return render_template('ManageReportGivenDay.html', records = None)
    
    else:
        
@@ -494,6 +494,7 @@ def report_given():
    date = request.form.get('date')
 
    report = user.report_rev(date)
+   
       
    if report == 2:
        
@@ -532,7 +533,7 @@ def report_view_given_time_top():
 
    if logged == 0:
         
-        return render_template('ManageReportTimePeriodTop.html', records = [])
+        return render_template('ManageReportTimePeriodTop.html', records = None)
    
    else:
        
@@ -565,7 +566,7 @@ def report_best_view():
 
    if logged == 0:
         
-        return render_template('ManageReportMonth.html', records = [])
+        return render_template('ManageReportMonth.html', records = None)
    
    else:
        
@@ -596,7 +597,7 @@ def report_view_avg():
 
    if logged == 0:
         
-        return render_template('ManageReportTimePeriodAvg.html', records = [])
+        return render_template('ManageReportTimePeriodAvg.html', records = None)
    
    else:
        
