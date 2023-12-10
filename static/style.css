@@ -1,12 +1,11 @@
 /* style.css */
 body {
     margin: 0;
-    background-image: url('/static/zoo1.jpg'); /* Replace with the path to your image */
+    background-image: url('/static/zoo.jpg'); /* Replace with the path to your image */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     height: 100vh; /* Make the body cover the full viewport height */
-    background-color: #4caf50;
 }
 
 #header {
@@ -35,7 +34,7 @@ body {
 .category-container {
     display: flex;
     justify-content: space-around;
-    margin-top: 500px; /* Add margin to move the category boxes down */
+    margin-top: 400px; /* Add margin to move the category boxes down */
 }
 
 .category-box {
@@ -170,10 +169,32 @@ th, td {
 
 .form-group button {
     background-color: #4caf50;
-    color: #ffffff;
+    color: #00ff15;
     padding: 10px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     width: 100%;
+}
+
+#logout-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#logout-box button {
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+#logout-box button:hover {
+    background-color: #333333;
 }
