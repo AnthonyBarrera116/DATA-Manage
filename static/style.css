@@ -1,7 +1,7 @@
 /* style.css */
 body {
     margin: 0;
-    background-image: url('/static/zoo.jpg'); /* Replace with the path to your image */
+    background-image: url('/static/zoo1.jpg'); /* Replace with the path to your image */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -34,7 +34,7 @@ body {
 .category-container {
     display: flex;
     justify-content: space-around;
-    margin-top: 400px; /* Add margin to move the category boxes down */
+    margin-top: 500px; /* Add margin to move the category boxes down */
 }
 
 .category-box {
